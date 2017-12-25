@@ -8,8 +8,33 @@ namespace E_Girl_Diana
 {
     internal partial class egrilldiana
     {
-        
+
         public void DoCombo()
+        {
+
+            bool useQ = RootM["combo"]["useq"].Enabled;
+            bool useW = RootM["combo"]["usew"].Enabled;
+            bool useE = RootM["combo"]["usee"].Enabled;
+            bool useR = RootM["combo"]["user"].Enabled;
+            bool Qmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.Q).Cost;
+            bool Wmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.W).Cost;
+            bool Emana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.E).Cost;
+            bool Rmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.R).Cost;
+            double Rdmg = Player.GetSpellDamage(target, SpellSlot.R);
+            if (target != null)
+            {
+                if (target.IsValidTarget() || Player.ManaPercent() >
+                    RootM["combo"]["mana"].Value)
+                    if (!target.HasBuffOfType(BuffType.Invulnerability) || !target.HasBuff("UndyingRage")) 
+                     DoTheCombo();
+            }
+
+
+
+
+
+        }
+        public void DoTheCombo()
         {
             bool useQ = RootM["combo"]["useq"].Enabled;
             bool useW = RootM["combo"]["usew"].Enabled;
@@ -20,11 +45,8 @@ namespace E_Girl_Diana
             bool Emana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.E).Cost;
             bool Rmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.R).Cost;
             double Rdmg = Player.GetSpellDamage(target, SpellSlot.R);
-            if (target == null || !target.IsValid || Player.ManaPercent() <
-                RootM["combo"]["mana"].Value) //|| RootM["combo"]["blacklist"]["use" + target.ChampionName.ToLower()].Enabled)
-            {
-                return;
-            }
+            //if (RootM["combo"]["blacklist"]["use" + target.ChampionName.ToLower()].Enabled) return;
+            
             switch (RootM["combo"]["rcombo"].Value)
             {
 
@@ -36,7 +58,7 @@ namespace E_Girl_Diana
                     }
                     if (useR && Rmana && !Q.Ready)
                     {
-                       R.Cast(target);
+                        R.Cast(target);
                     }
                     if (useW && Wmana && Player.Distance(target) < W.Range)
                     {
@@ -91,7 +113,7 @@ namespace E_Girl_Diana
                     {
                         if (target.IsDead) return;
                         else
-                        CastE(target);
+                            CastE(target);
                     }
                     break;
             }

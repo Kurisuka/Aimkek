@@ -4,6 +4,7 @@ using Aimtec.SDK.Events;
 using Aimtec.SDK.Menu;
 using Aimtec.SDK.TargetSelector;
 using Aimtec.SDK.Orbwalking;
+using System;
 
 namespace E_Girl_Diana
 {
@@ -13,11 +14,13 @@ namespace E_Girl_Diana
         
         public egrilldiana()
         {
-            LoadMenu();
+            LoadMenuAsync();
             LoadSpells();
             LoadEvents();
 
         }
+
+        
 
         /*private void ClickEvent(WndProcEventArgs e)
         {
@@ -33,14 +36,13 @@ namespace E_Girl_Diana
             }
         }*/
 
-        /*private void Render_OnPresent()
+        private void Render_OnPresent()
         {
             if (Player.IsDead) return;
-            DoDrawing();
-        }*/
+            else DoDrawing();
+        }
         private void Game_OnUpdate()
         {
-            Orbwalker.Implementation.AttackingEnabled = true;
 
             if (Player.IsDead || MenuGUI.IsChatOpen())
             {
@@ -49,7 +51,9 @@ namespace E_Girl_Diana
             switch (Orbwalker.Implementation.Mode)
             {
                 case OrbwalkingMode.Combo:
+                   
                     DoCombo();
+
                     break;
                 case OrbwalkingMode.Mixed:
                     DoHarass();

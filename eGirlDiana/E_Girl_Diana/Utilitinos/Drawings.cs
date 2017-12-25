@@ -13,7 +13,7 @@ namespace E_Girl_Diana
 {
     internal partial class egrilldiana
     {
-        /*public void DoDrawing()
+        public void DoDrawing()
         {
             if (RootM["draw"]["disabled"].As<MenuBool>().Enabled) return;
 
@@ -22,7 +22,7 @@ namespace E_Girl_Diana
             if (RootM["draw"]["drawe"].As<MenuBool>().Enabled) Render.Circle(Player.Position, E.Range, 50, Color.HotPink);
             if (RootM["draw"]["drawr"].As<MenuBool>().Enabled) Render.Circle(Player.Position, R.Range, 50, Color.Aquamarine);
 
-            string drawpos = "";
+            /*string drawpos = "";
             if (RootM["draw"]["combomode"].As<MenuBool>().Enabled)
             {
                 switch (RootM["combo"]["combomode"].As<MenuList>().Value)
@@ -43,7 +43,7 @@ namespace E_Girl_Diana
             pos.Y += 30;
 #pragma warning disable CS0618 // Type or member is obsolete
             Render.Text(pos, Color.White, drawpos);
-#pragma warning restore CS0618 // Type or member is obsolete
-        }*/
+#pragma warning restore CS0618 // Type or member is obsolete*/
+        }
     }
 }

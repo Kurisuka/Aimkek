@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Aimtec;
+using Aimtec.SDK.Events;
 using Aimtec.SDK.Menu.Components;
 
 namespace E_Girl_Diana
@@ -12,10 +13,13 @@ namespace E_Girl_Diana
     {
         public void LoadEvents()
         {
-            //Render.OnPresent += Render_OnPresent;
+            Render.OnPresent += Render_OnPresent;
             //.OnUpdate += OnTick;
             //Game.OnWndProc += ClickEvent;
             Game.OnUpdate += Game_OnUpdate;
+            GameEvents.GameStart += GameEventsOnGameStart;
+            Game.OnUpdate += UpdateSkin;
+            GameObject.OnRevive += GameObjectOnOnRevive;
 
         }
     }

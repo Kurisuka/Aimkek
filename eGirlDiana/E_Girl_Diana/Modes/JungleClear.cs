@@ -18,42 +18,52 @@ namespace E_Girl_Diana
         public static List<Obj_AI_Minion> GetGenericJungleMinionsTargetsInRange(float range)
         {
             return GameObjectos.Jungle.Where(m => !GameObjectos.JungleSmall.Contains(m) && m.IsValidTarget(range))
-.ToList();
+            .ToList();
         }
 
         public void DoJungleClear()
         {
             bool Qmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.Q).Cost;
             bool Wmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.W).Cost;
+            bool Rmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.R).Cost;
             foreach (var jungleTarget in GameObjectos.Jungle.Where(m => m.IsValidTarget(Q.Range)).ToList())
             {
                 if (!jungleTarget.IsValidTarget() || !jungleTarget.IsValidSpellTarget()) return;
                 
+                
                 if (RootM["jungleclear"]["useq"].Enabled && Q.Ready && Qmana)
                 {
-                    foreach (var minion in GetGenericJungleMinionsTargetsInRange(Q.Range))
-                    {
 
-                        if (minion.IsValidTarget(R.Range) && minion != null)
+                        if (jungleTarget.IsValidTarget(R.Range) && jungleTarget != null)
                         {
-                            Q.Cast();
+                            Q.Cast(jungleTarget);
                         }
-                    }
+
                 }
                 if (RootM["jungleclear"]["usew"].Enabled && W.Ready && Wmana)
                 {
-                    foreach (var minion in GetGenericJungleMinionsTargetsInRange(W.Range))
-                    {
 
 
-                        if (minion.IsValidTarget(W.Range) && minion != null)
+
+                        if (jungleTarget.IsValidTarget(W.Range) && jungleTarget != null)
                         {
                             W.Cast();
 
                         }
-                    }
+
 
                 }
+                /*if (RootM["jungleclear"]["user"].Enabled && R.Ready && Rmana)
+                {
+                    if (RootM["jungclear"]["junglemarked"].Enabled && IsMarked(jungleTarget) && jungleTarget.IsValidTarget(R.Range) && jungleTarget != null)
+                    { R.Cast(jungleTarget); }
+                    else return;
+                    if (jungleTarget.IsValidTarget(R.Range) && jungleTarget != null && !RootM["jungclear"]["junglemarked"].Enabled)
+                    {
+                        R.Cast(jungleTarget);
+                    }
+                }*/
+                   
             }
         }
     }
