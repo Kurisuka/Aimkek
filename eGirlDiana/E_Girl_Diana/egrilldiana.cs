@@ -10,8 +10,8 @@ namespace E_Girl_Diana
 {
     internal partial class egrilldiana
     {
+        private int Uhh;
 
-        
         public egrilldiana()
         {
             LoadMenuAsync();
@@ -22,19 +22,35 @@ namespace E_Girl_Diana
 
         
 
-        /*private void ClickEvent(WndProcEventArgs e)
+        private void ClickEvent(WndProcEventArgs e)
         {
-            if (RootM["keys"]["combomode"].As<MenuKeyBind>().Enabled)
+            if (RootM["key"]["modeswitch"].Enabled)
             {
-                RootM["combo"]["rcombo"].As<MenuList>().Value += 1;
-                RootM["keys"]["combomode"].As<MenuKeyBind>().Value =
-                    !RootM["keys"]["combomode"].As<MenuKeyBind>().Enabled;
-                if (RootM["combo"]["rcombo"].As<MenuList>().Value > 2)
+                if (Uhh < Game.TickCount)
                 {
-                    RootM["combo"]["rcombo"].As<MenuList>().Value = 0;
+                    if (RootM["key"]["rcombo"].As<MenuList>().Value == 0)
+                    {
+
+                        RootM["key"]["rcombo"].As<MenuList>().Value = 1;
+                        Uhh = Game.TickCount + 300;
+                        return;
+
+                    }
+                    if (RootM["key"]["rcombo"].As<MenuList>().Value == 1)
+                    {
+                        RootM["key"]["rcombo"].As<MenuList>().Value = 2;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["key"]["rcombo"].As<MenuList>().Value == 2)
+                    {
+                        RootM["key"]["rcombo"].As<MenuList>().Value = 0;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
                 }
             }
-        }*/
+        }
 
         private void Render_OnPresent()
         {

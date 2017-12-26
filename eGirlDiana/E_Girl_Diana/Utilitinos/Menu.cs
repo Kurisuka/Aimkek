@@ -83,7 +83,7 @@ namespace E_Girl_Diana
                         JungleClear.Add(new MenuSeperator("wset", "W Settings"));
                         JungleClear.Add(new MenuBool("usew", "Use W to Clear Jungle", true));
                         JungleClear.Add(new MenuSliderBool("manaw", "% Mana to use W", true, 50, 10, 99));
-                        //JungleClear.Add(new MenuSeperator("soonR", "Will add R settings later."));
+                        JungleClear.Add(new MenuSeperator("rset", "R Settings"));
                         JungleClear.Add(new MenuBool("user", "Use R to Clear Jungle", true));
                         JungleClear.Add(new MenuSliderBool("manar", "% Mana to use W", true, 50, 10, 99));
                         JungleClear.Add(new MenuBool("junglemarked", "Only if Marked", true));
@@ -140,16 +140,16 @@ namespace E_Girl_Diana
                 }
                     #endregion
 
-                    /*#region Key Menu
+                    #region Key Menu
                     {
                         //keybinds and shit
                         Key = new Menu("binds", "Key Binds");
-                        Key.Add(new MenuKeyBind("combomode", "Change Combo Mode", KeyCode.J, KeybindType.Press));
+                        Key.Add(new MenuKeyBind("modeswitch", "^- Key to Switch", KeyCode.T, KeybindType.Press));
                         //end of that too
 
                     }
                     RootM.Add(Key);
-                    #endregion*/
+                    #endregion
                     RootM.Attach();
                 //}
 

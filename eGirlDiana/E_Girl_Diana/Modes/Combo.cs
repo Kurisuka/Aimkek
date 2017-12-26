@@ -51,7 +51,7 @@ namespace E_Girl_Diana
             {
 
                 case 0:
-                    if (useQ && Qmana)
+                    if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 40)
                     {
                         Q.Cast(target);
 
@@ -74,9 +74,10 @@ namespace E_Girl_Diana
                     }
                     break;
                 case 1:
-                    if (useQ && Qmana)
+                    if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 40)
                     {
                         Q.Cast(target);
+
                     }
                     if (useR && Rmana && (IsMarked(target) || Rdmg > target.Health))
                     {
@@ -96,9 +97,10 @@ namespace E_Girl_Diana
                     }
                     break;
                 case 2:
-                    if (useQ && Qmana)
+                    if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 40)
                     {
                         Q.Cast(target);
+
                     }
                     if (useW && Wmana && Player.Distance(target) < W.Range)
                     {

@@ -47,7 +47,7 @@ namespace E_Girl_Diana
 
                         if (jungleTarget.IsValidTarget(W.Range) && jungleTarget != null)
                         {
-                            W.Cast();
+                            W.Cast(jungleTarget);
 
                         }
 
@@ -55,10 +55,10 @@ namespace E_Girl_Diana
                 }
                 if (RootM["jungleclear"]["user"].Enabled && R.Ready && Rmana && jungleTarget != null)
                 {
-                    if (RootM["jungclear"]["junglemarked"].Enabled && IsMarked(jungleTarget) && jungleTarget.IsValidTarget(R.Range) && jungleTarget != null)
+                    if (RootM["jungleclear"]["junglemarked"].Enabled && IsMarked(jungleTarget) && jungleTarget.IsValidTarget(R.Range) && jungleTarget != null)
                     { R.Cast(jungleTarget); }
                     
-                    if (jungleTarget.IsValidTarget(R.Range) && jungleTarget != null && !RootM["jungclear"]["junglemarked"].Enabled)
+                    if (jungleTarget.IsValidTarget(R.Range) && jungleTarget != null && !RootM["jungleclear"]["junglemarked"].Enabled)
                     {
                         R.Cast(jungleTarget);
                     }

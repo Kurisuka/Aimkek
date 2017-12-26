@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Aimtec;
 using Aimtec.SDK;
 using Aimtec.SDK.Extensions;
+using Aimtec.SDK.Prediction.Skillshots;
 using Spell = Aimtec.SDK.Spell;
 
 
@@ -29,7 +30,7 @@ namespace E_Girl_Diana
         public void LoadSpells()
         {
             Q = new Spell(SpellSlot.Q, 900f);
-            Q.SetSkillshot(0.25f, 75f, 2000f, false, Aimtec.SDK.Prediction.Skillshots.SkillshotType.Line);
+            Q.SetSkillshot(0.25f, 75f, 2000f, false, SkillshotType.Line, false, HitChance.None);
             W = new Spell(SpellSlot.W, 200f);
             E = new Spell(SpellSlot.E, 450f);
             R = new Spell(SpellSlot.R, 825f);

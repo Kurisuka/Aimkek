@@ -20,39 +20,55 @@ namespace E_Girl_Diana
 
         public static List<Obj_AI_Minion> GetEnemyLaneMinionsTargetsInRange(float range)
         {
-            return GameObjects.EnemyMinions.Where(m => m.IsValidTarget(range)).ToList();
+            return GameObjects.EnemyMinions.Where(m =>
+                    m.IsValidTarget(range) && m.UnitSkinName.Contains("Minion") && !m.UnitSkinName.Contains("Odin"))
+                .ToList();
         }
+
         public void DoLaneClear()
         {
             bool Qmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.Q).Cost;
             bool Wmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.W).Cost;
-            foreach (var minion in GetEnemyLaneMinionsTargetsInRange(Q.Range))
-            {
-                if (minion != null && (RootM["laneclear"]["useq"].As<MenuBool>().Enabled && Q.Ready && Qmana ))
-                {
-                    if (!minion.IsValidTarget(Q.Range) || minion.UnitSkinName.Contains("Plant"))
-                    {
-                        return;
-                    }
-                    else if (GameObjects.EnemyMinions.Count(t => t.IsValidTarget(Q.Range, false, false, Player.ServerPosition)) >= RootM["laneclear"]["mintoq"].Value) 
-                            { Q.Cast(minion); }
 
-                    
-                }
-                    if (RootM["laneclear"]["usew"].As<MenuBool>().Enabled && W.Ready && Wmana)
+            if (RootM["laneclear"]["useq"].As<MenuBool>().Enabled && Q.Ready && Qmana)
+            {
+                foreach (var minion in GetEnemyLaneMinionsTargetsInRange(Q.Range))
+                {
+
+
+                    if (minion.IsValidTarget(Q.Range) && minion != null)
                     {
-                        if (!minion.IsValidTarget(W.Range) || minion.UnitSkinName.Contains("Plant"))
+                        if (GameObjects.EnemyMinions.Count(t =>
+                                t.IsValidTarget(190, false, false, minion.ServerPosition)) >=
+                            RootM["laneclear"]["mintoq"].Value)
                         {
-                        return;
+                            Q.Cast(minion);
                         }
-                        else if (GameObjects.EnemyMinions.Count(t => t.IsValidTarget(W.Range, false, false, Player.ServerPosition)) >= RootM["laneclear"]["mintow"].As<MenuSliderBool>().Value)
+                    }
+                }
+
+
+
+            }
+            if (RootM["laneclear"]["usew"].As<MenuBool>().Enabled && W.Ready && Wmana)
+            {
+                foreach (var minion in GetEnemyLaneMinionsTargetsInRange(Q.Range))
+                {
+
+
+                    if (minion.IsValidTarget(Q.Range) && minion != null)
+                    {
+                        if (GameObjects.EnemyMinions.Count(t =>
+                                t.IsValidTarget(W.Range, false, false, Player.ServerPosition)) >=
+                            RootM["laneclear"]["mintow"].Value)
                         {
                             W.Cast();
                         }
                     }
-
-
+                }
             }
+
+
         }
     }
 }
