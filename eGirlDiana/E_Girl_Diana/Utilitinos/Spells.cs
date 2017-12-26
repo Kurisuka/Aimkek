@@ -30,7 +30,7 @@ namespace E_Girl_Diana
         public void LoadSpells()
         {
             Q = new Spell(SpellSlot.Q, 900f);
-            Q.SetSkillshot(0.25f, 75f, 2000f, false, SkillshotType.Line, false, HitChance.None);
+            Q.SetSkillshot(0.25f, 75f, 2000f, false, SkillshotType.Circle, false, HitChance.None);
             W = new Spell(SpellSlot.W, 200f);
             E = new Spell(SpellSlot.E, 420f);
             R = new Spell(SpellSlot.R, 825f);
