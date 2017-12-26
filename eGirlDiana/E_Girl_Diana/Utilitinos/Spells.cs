@@ -32,7 +32,7 @@ namespace E_Girl_Diana
             Q = new Spell(SpellSlot.Q, 900f);
             Q.SetSkillshot(0.25f, 75f, 2000f, false, SkillshotType.Line, false, HitChance.None);
             W = new Spell(SpellSlot.W, 200f);
-            E = new Spell(SpellSlot.E, 450f);
+            E = new Spell(SpellSlot.E, 420f);
             R = new Spell(SpellSlot.R, 825f);
 
             if (Player.SpellBook.GetSpell(SpellSlot.Summoner1).SpellData.Name.ToLower() == "summonerflash")
