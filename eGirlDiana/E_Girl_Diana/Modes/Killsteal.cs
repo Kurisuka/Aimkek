@@ -28,7 +28,7 @@ namespace E_Girl_Diana
                 var Health = hptarget.Health;
 
                 var dmgQ = Player.GetSpellDamage(hptarget, SpellSlot.Q);
-                if (Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 36 && Health < dmgQ &&
+                if (Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 39 && Health < dmgQ &&
                     RootM["killsteal"]["useq"].As<MenuBool>().Enabled)
                 {
                     Q.Cast(hptarget);
