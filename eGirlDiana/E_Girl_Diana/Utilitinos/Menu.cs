@@ -31,12 +31,11 @@ namespace E_Girl_Diana
                     Combo.Add(new MenuBool("user", "Use R in Combo", true));
                     Combo.Add(new MenuList("rcombo", "Different Combos", new[] { "Burst", "Use R only if marked", "Spam QWER like the flash" }, 0));
                     Combo.Add(new MenuSlider("mana", "Mana Manager in %", 50, 10, 99));
-                    //Combo.Add(new MenuBool("emisc", "Use E in enemy range only", true));
-
-                    /*BlacklistCombo = new Menu("blacklist", "Champion Blacklist");
+                    Combo.Add(new MenuKeyBind("modeswitch", "^- Key to Switch", KeyCode.T, KeybindType.Press));
+                    BlacklistCombo = new Menu("blacklist", "Champion Blacklist");
                     foreach (var tar in GameObjects.EnemyHeroes) BlacklistCombo.Add(new MenuBool("Use on " + tar.ChampionName.ToLower(),
                             "Don't use on: " + tar.ChampionName, false));
-                    Combo.Add(BlacklistCombo);*/
+                    Combo.Add(BlacklistCombo);
 
                     RootM.Add(Combo);
 
@@ -142,10 +141,10 @@ namespace E_Girl_Diana
 
                     #region Key Menu
                     {
-                        //keybinds and shit
+                       /* //keybinds and shit
                         Key = new Menu("binds", "Key Binds");
                         Key.Add(new MenuKeyBind("modeswitch", "^- Key to Switch", KeyCode.T, KeybindType.Press));
-                        //end of that too
+                        //end of that too*/
 
                     }
                     RootM.Add(Key);

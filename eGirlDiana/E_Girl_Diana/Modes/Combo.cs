@@ -45,13 +45,13 @@ namespace E_Girl_Diana
             bool Emana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.E).Cost;
             bool Rmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.R).Cost;
             double Rdmg = Player.GetSpellDamage(target, SpellSlot.R);
-            //if (RootM["combo"]["blacklist"]["use" + target.ChampionName.ToLower()].Enabled) return;
+            if (RootM["combo"]["blacklist"]["use" + target.ChampionName.ToLower()].Enabled) return;
             
             switch (RootM["combo"]["rcombo"].Value)
             {
 
                 case 0:
-                    if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 40)
+                    if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 36)
                     {
                         Q.Cast(target);
 
@@ -74,7 +74,7 @@ namespace E_Girl_Diana
                     }
                     break;
                 case 1:
-                    if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 40)
+                    if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 36)
                     {
                         Q.Cast(target);
 
@@ -97,7 +97,7 @@ namespace E_Girl_Diana
                     }
                     break;
                 case 2:
-                    if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 40)
+                    if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 36)
                     {
                         Q.Cast(target);
 

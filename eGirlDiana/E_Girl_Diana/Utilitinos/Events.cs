@@ -15,7 +15,6 @@ namespace E_Girl_Diana
         {
             Render.OnPresent += Render_OnPresent;
             //.OnUpdate += OnTick;
-            //Game.OnWndProc += ClickEvent;
             Game.OnUpdate += Game_OnUpdate;
             GameEvents.GameStart += GameEventsOnGameStart;
             Game.OnUpdate += UpdateSkin;

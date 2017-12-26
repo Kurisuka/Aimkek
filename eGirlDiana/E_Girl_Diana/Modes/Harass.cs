@@ -19,7 +19,11 @@ namespace E_Girl_Diana
             bool Qmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.Q).Cost;
             bool Wmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.W).Cost;
 
-            if (useQ && Qmana) Q.Cast(target);
+            if (useQ && Qmana && Q.GetPrediction(target).CastPosition.Distance(Player) < Q.Range - 40)
+            {
+                Q.Cast(target);
+
+            }
             if (Player.Distance(target) < W.Range && useW && Wmana) W.Cast();
 
 
