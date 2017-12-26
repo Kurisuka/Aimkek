@@ -22,10 +22,10 @@ namespace E_Girl_Diana
             if (RootM["draw"]["drawe"].As<MenuBool>().Enabled) Render.Circle(Player.Position, E.Range, 50, Color.HotPink);
             if (RootM["draw"]["drawr"].As<MenuBool>().Enabled) Render.Circle(Player.Position, R.Range, 50, Color.Aquamarine);
 
-            /*string drawpos = "";
-            if (RootM["draw"]["combomode"].As<MenuBool>().Enabled)
+            string drawpos = "";
+            if (RootM["draw"]["drawmode"].As<MenuBool>().Enabled)
             {
-                switch (RootM["combo"]["combomode"].As<MenuList>().Value)
+                switch (RootM["combo"]["rcombo"].As<MenuList>().Value)
                 {
                     case 0:
                         drawpos = "Combo Mode: Burst";
@@ -39,11 +39,11 @@ namespace E_Girl_Diana
                 }
             }
             var pos = Player.FloatingHealthBarPosition;
-            pos.X += 50;
-            pos.Y += 30;
+            pos.X += 40;
+            pos.Y += 180;
 #pragma warning disable CS0618 // Type or member is obsolete
             Render.Text(pos, Color.White, drawpos);
-#pragma warning restore CS0618 // Type or member is obsolete*/
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 }

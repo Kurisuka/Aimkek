@@ -45,8 +45,8 @@ namespace E_Girl_Diana
             bool Emana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.E).Cost;
             bool Rmana = Player.Mana > Player.SpellBook.GetSpell(SpellSlot.R).Cost;
             double Rdmg = Player.GetSpellDamage(target, SpellSlot.R);
-            if (RootM["combo"]["blacklist"]["use" + target.ChampionName.ToLower()].Enabled) return;
-            
+            if (RootM["combo"]["blacklist"]["Use on " + target.ChampionName.ToLower()].Enabled) return;
+
             switch (RootM["combo"]["rcombo"].Value)
             {
 

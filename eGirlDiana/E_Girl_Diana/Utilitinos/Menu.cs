@@ -98,7 +98,7 @@ namespace E_Girl_Diana
                     KillSteal.Add(new MenuBool("ks", "Killsteal", true));
                     KillSteal.Add(new MenuBool("useq", "Use Q to Steal", true));
                     KillSteal.Add(new MenuBool("user", "Use R to Steal", false));
-                    KillSteal.Add(new MenuBool("onlymarked", "Only if Marked", false));
+                    //KillSteal.Add(new MenuBool("onlymarked", "Only if Marked", false));
                 }
 
                 RootM.Add(KillSteal);
@@ -131,7 +131,7 @@ namespace E_Girl_Diana
                         Draw.Add(new MenuBool("draww", "Draw W Range", false));
                         Draw.Add(new MenuBool("drawe", "Draw E Range", false));
                         Draw.Add(new MenuBool("drawr", "Draw R Range", false));
-                        //Draw.Add(new MenuBool("drawmode", "Draw Combo Mode", true));
+                        Draw.Add(new MenuBool("drawmode", "Draw Combo Mode", true));
                         Draw.Add(new MenuBool("disabled", "Disable Drawings", false));
 
                     }
