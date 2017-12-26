@@ -83,10 +83,10 @@ namespace E_Girl_Diana
                         JungleClear.Add(new MenuSeperator("wset", "W Settings"));
                         JungleClear.Add(new MenuBool("usew", "Use W to Clear Jungle", true));
                         JungleClear.Add(new MenuSliderBool("manaw", "% Mana to use W", true, 50, 10, 99));
-                        JungleClear.Add(new MenuSeperator("soonR", "Will add R settings later."));
-                       /* JungleClear.Add(new MenuBool("user", "Use R to Clear Jungle", true));
+                        //JungleClear.Add(new MenuSeperator("soonR", "Will add R settings later."));
+                        JungleClear.Add(new MenuBool("user", "Use R to Clear Jungle", true));
                         JungleClear.Add(new MenuSliderBool("manar", "% Mana to use W", true, 50, 10, 99));
-                        JungleClear.Add(new MenuBool("junglemarked", "Only if Marked", true));*/
+                        JungleClear.Add(new MenuBool("junglemarked", "Only if Marked", true));
                     }
                     RootM.Add(JungleClear);
                     //end of jungclear ting

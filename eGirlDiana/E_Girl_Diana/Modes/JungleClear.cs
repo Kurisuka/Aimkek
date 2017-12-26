@@ -53,16 +53,16 @@ namespace E_Girl_Diana
 
 
                 }
-                /*if (RootM["jungleclear"]["user"].Enabled && R.Ready && Rmana)
+                if (RootM["jungleclear"]["user"].Enabled && R.Ready && Rmana && jungleTarget != null)
                 {
                     if (RootM["jungclear"]["junglemarked"].Enabled && IsMarked(jungleTarget) && jungleTarget.IsValidTarget(R.Range) && jungleTarget != null)
                     { R.Cast(jungleTarget); }
-                    else return;
+                    
                     if (jungleTarget.IsValidTarget(R.Range) && jungleTarget != null && !RootM["jungclear"]["junglemarked"].Enabled)
                     {
                         R.Cast(jungleTarget);
                     }
-                }*/
+                }
                    
             }
         }
