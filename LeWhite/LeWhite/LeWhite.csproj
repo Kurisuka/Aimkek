@@ -38,6 +38,9 @@
     <Reference Include="Aimtec.SDK">
       <HintPath>C:\Users\PC\AppData\Local\AimtecLoader\Data\System\Aimtec.SDK.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>C:\Users\PC\AppData\Local\AimtecLoader\Data\System\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -55,6 +58,7 @@
     <Compile Include="Modes\Combo.cs" />
     <Compile Include="Modes\Escape.cs" />
     <Compile Include="Modes\Harass.cs" />
+    <Compile Include="Modes\JungleClear.cs" />
     <Compile Include="Modes\KillSteal.cs" />
     <Compile Include="Modes\LaneClear.cs" />
     <Compile Include="Modes\LastHit.cs" />
@@ -64,12 +68,15 @@
     <Compile Include="Utilities\Castings.cs" />
     <Compile Include="Utilities\Drawings.cs" />
     <Compile Include="Utilities\Events.cs" />
+    <Compile Include="Utilities\GameObjects.cs" />
     <Compile Include="Utilities\Menu.cs" />
+    <Compile Include="Utilities\SkinHack.cs" />
     <Compile Include="Utilities\Spells.cs" />
     <Compile Include="Utilities\Variables.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -31,7 +31,7 @@ namespace LeWhite
             {
                 Render.Circle(MyHero.Position, R.Range, 50, Color.Brown);
             }
-            var drawpos = "Default";
+            /*var drawpos = "Default";
             if (RootM["combo"]["combologics"]["rlogic"].As<MenuList>().Value == 0)
             {
                 var dp = "DF";
@@ -93,7 +93,7 @@ namespace LeWhite
             var pos = MyHero.FloatingHealthBarPosition;
             pos.X += 55;
             pos.Y += 55;
-            Render.Text(pos, Color.White, drawpos);
+            Render.Text(pos, Color.White, drawpos);*/
 
             #endregion
         }

@@ -70,7 +70,33 @@ namespace LeWhite
             }
         }
 
+        private static void GameEventsOnGameStart()
+        {
+
+            Self["mySkin"].OnValueChanged  += (sender, args) => Game.OnUpdate += UpdateSkin;
+
+        }
+        private static void UpdateSkin()
+        {
+
+            var mySkin = Misc["mySkin"].Value;
+            MyHero.SetSkinId(mySkin);
+            Game.OnUpdate -= UpdateSkin;
+        }
+        private static void GameObjectOnOnRevive(GameObject sender)
+        {
+            if (sender is Obj_AI_Hero hero)
+            {
+                if (hero.IsMe)
+                {
+                    var mySkin = Self["mySkin"].Value;
+                    MyHero.SetSkinId(mySkin);
+                }
+            }
+        }
+
     }
 }
+
 
 

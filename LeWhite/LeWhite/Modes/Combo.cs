@@ -58,7 +58,7 @@ namespace LeWhite
                     }
                     if (useE && Emana )
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                 }
                 else if (MyHero.Distance(target) < E.Range)//REQEW
@@ -73,7 +73,7 @@ namespace LeWhite
                     }
                     if ( Emana && useE)
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     if ( useW && Wmana && IsW1())
                     {
@@ -98,7 +98,7 @@ namespace LeWhite
                     }
                     if ( Emana && useE)
                     {
-                        CastE(target);
+                        E.Cast(target);
                 }
                 }
 
@@ -125,7 +125,7 @@ namespace LeWhite
                     }
                     if (useE && Emana && !Q.Ready)
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     if (useR && Rmana)
                     {
@@ -140,7 +140,7 @@ namespace LeWhite
                 {
                     if (useE && Emana)
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
 
                     if (useQ && Qmana && !E.Ready)
@@ -168,7 +168,7 @@ namespace LeWhite
                     }
                     if (useE && Emana && !Q.Ready)
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     if (useR && Rmana)
                     {
@@ -183,7 +183,7 @@ namespace LeWhite
                 {
                     if (useE && Emana)
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
 
                     if (useQ && Qmana && IsPassive(target))
@@ -211,7 +211,7 @@ namespace LeWhite
                     }
                     if (useE && Emana && !Q.Ready)
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     if (useR && Rmana)
                     {
@@ -254,7 +254,7 @@ namespace LeWhite
                     }
                     if ( useE && Emana)
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     if ( useR && Rmana && IsR1())
                     {
@@ -272,7 +272,7 @@ namespace LeWhite
                     }
                     if (useE && Emana )
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     if (useW && Wmana)
                     {
@@ -282,7 +282,7 @@ namespace LeWhite
                 case 2:
                     if (useE && Emana)
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     if (Qmana && useQ &&  IsPassive(target))
                     {
@@ -300,7 +300,7 @@ namespace LeWhite
                 case 3:
                     if (useE && Emana)
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     if (Wmana && useW  && IsW1())
                     {
@@ -330,7 +330,7 @@ namespace LeWhite
                     }
                     if (useE && Emana )
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     break;
                 case 5:
@@ -348,7 +348,7 @@ namespace LeWhite
                     }
                     if (useE && Emana )
                     {
-                        CastE(target);
+                        E.Cast(target);
                     }
                     break;
                 case 6:
@@ -366,7 +366,7 @@ namespace LeWhite
                     }
                     if ( useE && Emana)
                     {
-                        DelayAction.Queue(450, () => CastE(target));
+                        DelayAction.Queue(450, () => E.Cast(target));
                     }
                     break;
                 case 7:
@@ -382,7 +382,7 @@ namespace LeWhite
                         }
                         if ( Emana && useE)
                         {
-                            CastE(target);
+                            E.Cast(target);
                         }
                         if ( useR && Rmana && IsR1())
                         {

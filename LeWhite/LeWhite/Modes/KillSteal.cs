@@ -28,13 +28,13 @@ namespace LeWhite
                 if (MyHero.Distance(hptarget) < E.Range && Health < dmgE && !RootM["keys"]["combokey"].As<MenuKeyBind>().Enabled &&
                     RootM["killsteal"]["useE"].As<MenuBool>().Enabled)
                 {
-                   CastE(hptarget);
+                  E.Cast(hptarget);
                 }
                 var dmgQ = MyHero.GetSpellDamage(hptarget, SpellSlot.Q);
                 if (MyHero.Distance(hptarget) < Q.Range && Health < dmgQ && !RootM["keys"]["combokey"].As<MenuKeyBind>().Enabled &&
                     RootM["killsteal"]["useQ"].As<MenuBool>().Enabled)
                 {
-                    CastQ(hptarget);
+                    Q.Cast(hptarget);
                 }
                 var dmgW = MyHero.GetSpellDamage(hptarget, SpellSlot.W);
                 if (MyHero.Distance(hptarget) < W.Range && Health < dmgW && !RootM["keys"]["combokey"].As<MenuKeyBind>().Enabled &&
@@ -46,7 +46,7 @@ namespace LeWhite
                 if (MyHero.Distance(hptarget) < Q.Range && Health < dmgR && !RootM["keys"]["combokey"].As<MenuKeyBind>().Enabled &&
                     RootM["killsteal"]["useR"].As<MenuBool>().Enabled)
                 {
-                    CastR("RQ",hptarget);
+                   CastR("RQ",hptarget);
                 }
                 if (!IsIgnite) continue;
                 var dmgI = (50 + ((MyHero.Level) * 20));

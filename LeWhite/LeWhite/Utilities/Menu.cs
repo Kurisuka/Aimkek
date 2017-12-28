@@ -1,4 +1,5 @@
-﻿using Aimtec.SDK.Menu;
+﻿using Aimtec;
+using Aimtec.SDK.Menu;
 using Aimtec.SDK.Menu.Components;
 using Aimtec.SDK.Orbwalking;
 using Aimtec.SDK.Util;
@@ -10,10 +11,10 @@ namespace LeWhite
     {
         #region Static Operations
         public static Menu RootM, Combo, ComboBack, ComboLogics, ComboBlacklist, Harass, AutoHarass, Farm, LastHit, LaneClear, JungleClear, OneShot,
-            KillSteal, Escape, Draw, WShadow, RShadow, DrawOptions, Misc, TurretDive, SkinHax, AutoLevel, AntiAfk, Key;
+            KillSteal, Escape, Draw, WShadow, RShadow, DrawOptions, Misc, TurretDive, SkinHax, AutoLevel, AntiAfk, Key, Self;
         #endregion
 
-        public void LoadMenu()
+        public async System.Threading.Tasks.Task LoadMenuAsync()
         {
             // Inıtialize the first menu
             RootM = new Menu("leblanc", "LeWhite - Classic Misdirection Revived", true);
@@ -112,7 +113,7 @@ namespace LeWhite
                         }
                         Farm.Add(LaneClear);
 
-                        /*JungleClear = new Menu("jungleclear", "JungleClear Settings");
+                        JungleClear = new Menu("jungleclear", "JungleClear Settings");
                          {
                              JungleClear.Add(new MenuBool("useQ", "Use Q in JungleClear", true));
                              JungleClear.Add(new MenuBool("useW", "Use W in JungleClear", true));
@@ -123,7 +124,7 @@ namespace LeWhite
                              JungleClear.Add(new MenuSliderBool("WMana", "W Skill Mana Manager  %", true, 30, 10, 99));
                              JungleClear.Add(new MenuSliderBool("Emana", "E Skill Mana Manager  %", true, 30, 10, 99));
                          }
-                         Farm.Add(JungleClear);*/
+                         Farm.Add(JungleClear);
 
                         LastHit = new Menu("lasthit", "LastHit Settings");
                         {
@@ -149,6 +150,7 @@ namespace LeWhite
                     Escape = new Menu("escape", "Flee Settings");
                     Escape.Add(new MenuBool("useW", "Use W While Fleeing", true));
                     Escape.Add(new MenuBool("useR", "Use RW While Fleeing", false));
+                    Escape.Add(new MenuKeyBind("fleekey", "Flee Key", KeyCode.Y, KeybindType.Press));
                 }
                 RootM.Add(Escape);
                 #endregion
@@ -175,22 +177,18 @@ namespace LeWhite
 
                 #region Misc Menu
                 {
-                       Misc = new Menu("misc", "Misc Settings");
-                      
-
-                           var Skinhax = new Menu("skinhack", "Skinhack Settings");
-                           {
-                        /*Skinhax.Add(new MenuBool("useskin", "Use Skin Hack", false));
-                        Skinhax.Add(new MenuList("selectedskin", "Select Skin", new[] { "
-                        
-                        
-                        
-                        ", "Shockblade", "SKT T1", "PROJECT" }, 0));*/
-                        Skinhax.Add(new MenuSeperator( "soon", "Soon"));
-                           }
-                           Misc.Add(Skinhax);
-
-                       }
+                    var skins = await GetSkins(MyHero.ChampionName);
+                    //misc ting
+                    Misc = new Menu("misc", "Miscellaneous");
+                    {
+                        Misc.Add(new MenuSeperator("skinting", "Choose your skin:"));
+                        Self = new Menu("self", "Skins") {
+                        new MenuList("mySkin", "Champion Skin", skins, 0)};
+                        Self["mySkin"].OnValueChanged += (sender, args) => Game.OnUpdate += UpdateSkin;
+                        Misc.Add(Self);
+                        //Misc.Add(new MenuSeperator("soon", "SoonBIK"));
+                    }
+                }
                 }
                 RootM.Add(Misc);
                 #endregion
@@ -208,7 +206,7 @@ namespace LeWhite
                     }
                     Draw.Add(DrawOptions);
 
-                    Draw.Add(new MenuBool("combomode", "Draw Combo Mode", true));
+                    //Draw.Add(new MenuBool("combomode", "Draw Combo Mode", true));
                     // Draw.Add(new MenuBool("damage", "Draw Damage Indicator", false));
                     // Draw.Add(new MenuBool("targetcal", "Target Calculation", false));
                     Draw.Add(new MenuBool("disable", "Disable All Drawings", false));
@@ -219,20 +217,21 @@ namespace LeWhite
 
                 #region Key Menu
                 {
-                    Key = new Menu("keys", "Key Settings");
-                    Key.Add(new MenuSeperator("combo1", "Combo Key Settings"));
-                    Key.Add(new MenuKeyBind("combokey", "Combo Key", KeyCode.Space, KeybindType.Press));
-                    Key.Add(new MenuKeyBind("combomode", "Combo Mode Key", KeyCode.G, KeybindType.Press));
-                    Key.Add(new MenuKeyBind("onlye", "Only Use E Skill (only stun )", KeyCode.O, KeybindType.Press));
+                    /*Key = new Menu("keys", "Key Settings");
+                    /*Key.Add(new MenuSeperator("combo1", "Combo Key Settings"));
+                    Key.Add(new MenuKeyBind("combokey", "Combo Key", KeyCode.Space, KeybindType.Press));*/
+                    //Key.Add(new MenuKeyBind("combomode", "Combo Mode Key", KeyCode.G, KeybindType.Press));
+                    /*Key.Add(new MenuKeyBind("onlye", "Only Use E Skill (only stun )", KeyCode.O, KeybindType.Press));
                     Key.Add(new MenuSeperator("harass1", "Harass Key Settings"));
                     Key.Add(new MenuKeyBind("harasskey", "Smart Harass Key", KeyCode.C, KeybindType.Press));
                     Key.Add(new MenuSeperator("lane1", "Clear Key Settings"));
                     Key.Add(new MenuKeyBind("lasthitkey", "LastHit Key", KeyCode.X, KeybindType.Press));
                     Key.Add(new MenuKeyBind("laneclearkey", "LaneClear Key", KeyCode.V, KeybindType.Press));
                     //Key.Add(new MenuKeyBind("jungleclearkey", "JungleClear Key", KeyCode.V, KeybindType.Press));
-                    Key.Add(new MenuSeperator("other", "Other Key Settings"));
-                    Key.Add(new MenuKeyBind("escape", "Escape Key", KeyCode.Y, KeybindType.Press));
-                    //Key.Add(new MenuKeyBind("wallkey", "Wall Jump Key", KeyCode.Y, KeybindType.Press));
+                    Key.Add(new MenuSeperator("other", "Other Key Settings"));*/
+                    //Key.Add(new MenuKeyBind("escape", "Escape Key", KeyCode.Y, KeybindType.Press));
+                //Key.Add(new MenuKeyBind("wallkey", "Wall Jump Key", KeyCode.Y, KeybindType.Press));
+                    //Key.Add(new MenuKeyBind("skinhackerino", "Change Skin Key", KeyCode.N, KeybindType.Press));
 
                 }
                 RootM.Add(Key);

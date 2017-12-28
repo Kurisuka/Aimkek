@@ -1,5 +1,6 @@
 ﻿
 using Aimtec;
+using Aimtec.SDK.Events;
 
 namespace LeWhite
 {
@@ -10,7 +11,10 @@ namespace LeWhite
         {
            Render.OnPresent += OnDraw;
             Game.OnUpdate += OnTick;
-            Game.OnWndProc += ClickEvent;
+            //Game.OnUpdate += Game_OnUpdate;
+            GameEvents.GameStart += GameEventsOnGameStart;
+            Game.OnUpdate += UpdateSkin;
+            GameObject.OnRevive += GameObjectOnOnRevive;
         }
     }
 }

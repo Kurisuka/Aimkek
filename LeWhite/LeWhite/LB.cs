@@ -3,16 +3,18 @@ using System;
 using Aimtec;
 using Aimtec.SDK.Menu.Components;
 using Aimtec.SDK.Menu.Config;
+using Aimtec.SDK.Orbwalking;
 using Aimtec.SDK.TargetSelector;
 
 namespace LeWhite
 {
     internal partial class LB
     {
-
+        public static Orbwalker Orbwalker = new Orbwalker();
+        private int Uhh;
         public LB()
         {
-            this.LoadMenu();
+            this.LoadMenuAsync();
             this.LoadSpells();
             this.LoadEvents();
         }
@@ -24,27 +26,27 @@ namespace LeWhite
                 return;
             }
             target = TargetSelector.GetTarget(1600);
-            if (RootM["keys"]["combokey"].As<MenuKeyBind>().Enabled)
+
+            switch (Orbwalker.Mode)
             {
-                DoCombo();
+                case OrbwalkingMode.Combo:
+                    DoCombo();
+                    break;
+                case OrbwalkingMode.Mixed:
+                    DoHarass();
+                    break;
+                case OrbwalkingMode.Lasthit:
+                    DoLastHit();
+                    break;
+                case OrbwalkingMode.Laneclear:
+                    DoLaneClear();
+                    DoJungleClear();
+                    break;
             }
-            if (RootM["keys"]["harasskey"].As<MenuKeyBind>().Enabled)
-            {
-                DoHarass();
-            }
-            if (RootM["keys"]["laneclearkey"].As<MenuKeyBind>().Enabled)
-            {
-                DoLaneClear();
-            }
-            if (RootM["keys"]["lasthitkey"].As<MenuKeyBind>().Enabled)
-            {
-                DoLastHit();
-            }
-            if (RootM["keys"]["escape"].As<MenuKeyBind>().Enabled)
-            {
-                this.DoEscape();
-            }
-            DoKillSteal();
+
+            if (RootM["escape"]["fleekey"].Enabled) DoEscape();
+
+            //DoKillSteal();
             // OnlyE();
         }
 
@@ -59,24 +61,108 @@ namespace LeWhite
 
         }
 
-        private void ClickEvent(WndProcEventArgs e)
+        /*private void Game_OnUpdate()
         {
-            if (RootM["keys"]["combomode"].As<MenuKeyBind>().Enabled)
+            if (RootM["keys"]["skinhackerino"].Enabled)
             {
-                RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value += 1;
-                RootM["keys"]["combomode"].As<MenuKeyBind>().Value =
-                    !RootM["keys"]["combomode"].As<MenuKeyBind>().Enabled;
-                if (RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value > 7)
+                if (Uhh < Game.TickCount)
                 {
-                    RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value = 0;
+                    if (RootM["misc"]["self"]["mySkin"].As<MenuList>().Value == 0)
+                    {
+                        RootM["misc"]["self"]["mySkin"].As<MenuList>().Value = 1;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["misc"]["self"]["mySkin"].As<MenuList>().Value == 1)
+                    {
+                        RootM["misc"]["self"]["mySkin"].As<MenuList>().Value = 2;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["misc"]["self"]["mySkin"].As<MenuList>().Value == 2)
+                    {
+                        RootM["misc"]["self"]["mySkin"].As<MenuList>().Value = 3;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["misc"]["self"]["mySkin"].As<MenuList>().Value == 3)
+                    {
+                        RootM["misc"]["self"]["mySkin"].As<MenuList>().Value = 4;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["misc"]["self"]["mySkin"].As<MenuList>().Value == 4)
+                    {
+
+                        RootM["misc"]["self"]["mySkin"].As<MenuList>().Value = 5;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+
+                    if (RootM["misc"]["self"]["mySkin"].As<MenuList>().Value == 5)
+                    {
+                        RootM["misc"]["self"]["mySkin"].As<MenuList>().Value = 0;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
                 }
             }
-        }
-        /*public void SkinHack()
-        {
+            /*if (RootM["keys"]["combomode"].Enabled)
+            {
+                if (Uhh < Game.TickCount)
+                {
+                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 0)
+                    {
+                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 1;
+                        Uhh = Game.TickCount + 300;
+                        return;
 
-        }*/
+                    }
+                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 1)
+                    {
+                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 2;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 2)
+                    {
+                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 3;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 3)
+                    {
+                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 4;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 4)
+                    {
+                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 5;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 6)
+                    {
+                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 7;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 7)
+                    {
+                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 0;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
 
 
+                }
+            }*/
     }
+    /*public void SkinHack()
+    {
+
+    }*/
+
+
 }
