@@ -45,14 +45,15 @@ namespace LeWhite
                         {
                             ComboLogics = new Menu("combologics", "Combo Logic Setings");
                             {
-                                ComboLogics.Add(new MenuList("rlogic", "Select R Logic", new[] { "Manual Settings", "Stick to combo logic" }, 0));
-                                ComboLogics.Add(new MenuSeperator("info2", "Manual Settings activates Manual Settings"));
-                                ComboLogics.Add(new MenuSeperator("info3", "Stick to combo activates Combo Logic options"));
-                                ComboLogics.Add(new MenuList("select", "Select Combo Logic", new[] { "Dynamic combo", "Manual Combo" }, 0));
-                                ComboLogics.Add(new MenuSeperator("b1", "Manual Combo Settings"));
+                                ComboLogics.Add(new MenuList("rlogic", "Select R Logic", new[] { "Manual Combo", "Dynamic Combo", "Combo Logic" }, 0));
+                                ComboLogics.Add(new MenuSeperator("b2", "Combo Logic Setings"));
+                                ComboLogics.Add(new MenuSeperator("b3", "Only if 'Combo Logic' Selected"));
                                 ComboLogics.Add(new MenuList("mCombo", "Select Combo Logic", new[] { "Q>E>W>R", "Q>R>E>W", "E>Q>W>R", "E>W>Q>R", "W>R>Q>E", "W>Q>R>E", "Q>R>W>E", "Double Stun" }, 0));
+                                ComboLogics.Add(new MenuKeyBind("switchkey", "Combo Switch Key", KeyCode.T,
+                                    KeybindType.Press));
                                 ComboLogics.Add(new MenuSliderBool("delay", "Delay For Double Stun", true, 1650, 0, 3000));
-                                ComboLogics.Add(new MenuSeperator("info", "Manual R Setings"));
+                                ComboLogics.Add(new MenuSeperator("b1", "Manual Combo Settings"));
+                                ComboLogics.Add(new MenuSeperator("b4", "Only if 'Manual Combo' Selected"));
                                 ComboLogics.Add(new MenuList("rslogic", "Select Your Ulti", new[] { "Q", "E","W" }, 0));
                             }
                             Combo.Add(ComboLogics);
@@ -165,7 +166,7 @@ namespace LeWhite
                     KillSteal.Add(new MenuBool("useQ", "Use Q in Killsteal", true));
                     KillSteal.Add(new MenuBool("useW", "Use W in Killsteal", true));
                     KillSteal.Add(new MenuBool("useE", "Use E in Killsteal", true));
-                    KillSteal.Add(new MenuBool("useR", "UseR in Killsteal", true));
+                    KillSteal.Add(new MenuBool("useR", "Use R in Killsteal", true));
                     if (IsIgnite)
                     {
                         KillSteal.Add(new MenuBool("useI", "Use Ignite to Killsteal", true));
@@ -206,35 +207,13 @@ namespace LeWhite
                     }
                     Draw.Add(DrawOptions);
 
-                    //Draw.Add(new MenuBool("combomode", "Draw Combo Mode", true));
-                    // Draw.Add(new MenuBool("damage", "Draw Damage Indicator", false));
+                    Draw.Add(new MenuBool("combomode", "Draw Combo Mode", true));
+                    Draw.Add(new MenuBool("damage", "Draw Damage Indicator", false));
                     // Draw.Add(new MenuBool("targetcal", "Target Calculation", false));
                     Draw.Add(new MenuBool("disable", "Disable All Drawings", false));
 
                 }
                 RootM.Add(Draw);
-                #endregion
-
-                #region Key Menu
-                {
-                    /*Key = new Menu("keys", "Key Settings");
-                    /*Key.Add(new MenuSeperator("combo1", "Combo Key Settings"));
-                    Key.Add(new MenuKeyBind("combokey", "Combo Key", KeyCode.Space, KeybindType.Press));*/
-                    //Key.Add(new MenuKeyBind("combomode", "Combo Mode Key", KeyCode.G, KeybindType.Press));
-                    /*Key.Add(new MenuKeyBind("onlye", "Only Use E Skill (only stun )", KeyCode.O, KeybindType.Press));
-                    Key.Add(new MenuSeperator("harass1", "Harass Key Settings"));
-                    Key.Add(new MenuKeyBind("harasskey", "Smart Harass Key", KeyCode.C, KeybindType.Press));
-                    Key.Add(new MenuSeperator("lane1", "Clear Key Settings"));
-                    Key.Add(new MenuKeyBind("lasthitkey", "LastHit Key", KeyCode.X, KeybindType.Press));
-                    Key.Add(new MenuKeyBind("laneclearkey", "LaneClear Key", KeyCode.V, KeybindType.Press));
-                    //Key.Add(new MenuKeyBind("jungleclearkey", "JungleClear Key", KeyCode.V, KeybindType.Press));
-                    Key.Add(new MenuSeperator("other", "Other Key Settings"));*/
-                    //Key.Add(new MenuKeyBind("escape", "Escape Key", KeyCode.Y, KeybindType.Press));
-                //Key.Add(new MenuKeyBind("wallkey", "Wall Jump Key", KeyCode.Y, KeybindType.Press));
-                    //Key.Add(new MenuKeyBind("skinhackerino", "Change Skin Key", KeyCode.N, KeybindType.Press));
-
-                }
-                RootM.Add(Key);
                 #endregion
 
                 RootM.Add(new MenuSeperator("1", "LeWhite"));

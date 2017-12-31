@@ -12,6 +12,7 @@ namespace LeWhite
     {
         public static Orbwalker Orbwalker = new Orbwalker();
         private int Uhh;
+
         public LB()
         {
             this.LoadMenuAsync();
@@ -21,10 +22,73 @@ namespace LeWhite
 
         private void OnTick()
         {
+
+            if (RootM["combo"]["combologics"]["switchkey"].As<MenuKeyBind>().Value)
+            {
+                if (Uhh < Game.TickCount)
+                {
+                    if (RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value == 0)
+                    {
+                        RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value = 1;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value ==1)
+                    {
+                        RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value = 2;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value == 2)
+                    {
+                        RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value = 3;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+
+                    if (RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value == 3)
+                    {
+                        RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value = 4;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+
+                    if (RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value == 4)
+                    {
+                        RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value = 5;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+
+                    if (RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value == 5)
+                    {
+                        RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value = 6;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value == 6)
+                    {
+                        RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value = 7;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+
+                    if (RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value == 7)
+                    {
+                        RootM["combo"]["combologics"]["mCombo"].As<MenuList>().Value = 0;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+
+
+                }
+            }
+
             if (MyHero.IsDead)
             {
                 return;
             }
+
             target = TargetSelector.GetTarget(1600);
 
             switch (Orbwalker.Mode)
@@ -46,7 +110,7 @@ namespace LeWhite
 
             if (RootM["escape"]["fleekey"].Enabled) DoEscape();
 
-            //DoKillSteal();
+            DoKillSteal();
             // OnlyE();
         }
 
@@ -57,6 +121,7 @@ namespace LeWhite
             {
                 return;
             }
+
             DoDraws();
 
         }
@@ -107,57 +172,7 @@ namespace LeWhite
                     }
                 }
             }
-            /*if (RootM["keys"]["combomode"].Enabled)
-            {
-                if (Uhh < Game.TickCount)
-                {
-                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 0)
-                    {
-                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 1;
-                        Uhh = Game.TickCount + 300;
-                        return;
-
-                    }
-                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 1)
-                    {
-                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 2;
-                        Uhh = Game.TickCount + 300;
-                        return;
-                    }
-                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 2)
-                    {
-                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 3;
-                        Uhh = Game.TickCount + 300;
-                        return;
-                    }
-                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 3)
-                    {
-                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 4;
-                        Uhh = Game.TickCount + 300;
-                        return;
-                    }
-                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 4)
-                    {
-                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 5;
-                        Uhh = Game.TickCount + 300;
-                        return;
-                    }
-                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 6)
-                    {
-                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 7;
-                        Uhh = Game.TickCount + 300;
-                        return;
-                    }
-                    if (RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value == 7)
-                    {
-                        RootM["keys"]["combologics"]["mCombo"].As<MenuList>().Value = 0;
-                        Uhh = Game.TickCount + 300;
-                        return;
-                    }
-
-
-                }
-            }*/
+            
     }
     /*public void SkinHack()
     {
@@ -165,4 +180,5 @@ namespace LeWhite
     }*/
 
 
+    }
 }
