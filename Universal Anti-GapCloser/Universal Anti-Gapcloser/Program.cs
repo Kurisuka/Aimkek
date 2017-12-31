@@ -6,11 +6,13 @@ using System.Linq;
 using Aimtec.SDK.Menu.Components;
 using Aimtec.SDK.Orbwalking;
 using static Universal_Anti_Gapcloser.MenuStuff;
+using static Universal_Anti_Gapcloser.Gapcloser;
 
 using Spell = Aimtec.SDK.Spell;
 
 namespace Universal_Anti_Gapcloser
 {
+    using Aimtec.SDK.Util;
     using System.Drawing;
 
     internal class Program
@@ -69,6 +71,11 @@ namespace Universal_Anti_Gapcloser
                 return;
             }
 
+            if (Game.TickCount >= Game.TickCount + 3000)
+            {
+                Universal_Anti_Gapcloser.Gapcloser.canuse = false;
+            }
+
             Q.Range = MMenu["urspells"]["qsettss"]["qrange"].As<MenuSlider>().Value;
             W.Range = MMenu["urspells"]["wsettss"]["wrange"].As<MenuSlider>().Value;
             E.Range = MMenu["urspells"]["esettss"]["erange"].As<MenuSlider>().Value;
@@ -81,116 +88,119 @@ namespace Universal_Anti_Gapcloser
 
         private static void Gapclose(Obj_AI_Base target, GapcloserArgs Args)
         {
-
-            bool useW = MMenu["urspells"]["wsettss"]["wUsage"].Enabled;
-            bool useE = MMenu["urspells"]["esettss"]["eUsage"].Enabled;
-            bool useR = MMenu["urspells"]["rsettss"]["rUsage"].Enabled;
-            bool useQ = MMenu["urspells"]["qsettss"]["qUsage"].Enabled;
-            if (!MMenu["urspells"]["onlyifcombo"].Enabled)
+            if (Universal_Anti_Gapcloser.Gapcloser.canuse)
             {
-                if (useQ)
-                {
 
-                    if (target != null)
+                bool useW = MMenu["urspells"]["wsettss"]["wUsage"].Enabled;
+                bool useE = MMenu["urspells"]["esettss"]["eUsage"].Enabled;
+                bool useR = MMenu["urspells"]["rsettss"]["rUsage"].Enabled;
+                bool useQ = MMenu["urspells"]["qsettss"]["qUsage"].Enabled;
+                if (!MMenu["urspells"]["onlyifcombo"].Enabled)
+                {
+                    if (useQ)
                     {
 
-                        if (target.IsValidTarget(Q.Range))
+                        if (target != null)
                         {
 
-                            switch (MMenu["urspells"]["qsettss"]["chooseplzq"].Value)
+                            if (target.IsValidTarget(Q.Range))
+                            {
+
+                                switch (MMenu["urspells"]["qsettss"]["chooseplzq"].Value)
+                                {
+                                    case 0:
+                                        Q.Cast(target);
+                                        break;
+                                    case 1:
+                                        var pos = Player.ServerPosition +
+                                                  (Player.ServerPosition - Args.EndPosition).Normalized() * Q.Range;
+                                        Q.Cast(pos);
+                                        break;
+                                    case 2:
+                                        Q.Cast();
+                                        break;
+                                    case 3:
+                                        Q.Cast(Args.EndPosition);
+
+                                        break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (useW)
+                    {
+                        if (target != null && target.IsValidTarget(W.Range))
+                        {
+                            switch (MMenu["urspells"]["wsettss"]["chooseplzw"].Value)
                             {
                                 case 0:
-                                    Q.Cast(target);
+                                    W.Cast(target);
                                     break;
                                 case 1:
                                     var pos = Player.ServerPosition +
-                                              (Player.ServerPosition - Args.EndPosition).Normalized() * Q.Range;
-                                    Q.Cast(pos);
+                                              (Player.ServerPosition - Args.EndPosition).Normalized() * W.Range;
+                                    W.Cast(pos);
                                     break;
                                 case 2:
-                                    Q.Cast();
+                                    W.Cast();
                                     break;
                                 case 3:
-                                    Q.Cast(Args.EndPosition);
+                                    W.Cast(Args.EndPosition);
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (useE)
+                    {
+                        if (target != null && target.IsValidTarget(E.Range))
+                        {
+                            switch (MMenu["urspells"]["esettss"]["chooseplze"].Value)
+                            {
+                                case 0:
+                                    E.Cast(target);
+                                    break;
+                                case 1:
+                                    var pos = Player.ServerPosition +
+                                              (Player.ServerPosition - Args.EndPosition).Normalized() * E.Range;
+                                    E.Cast(pos);
+                                    break;
+                                case 2:
+                                    E.Cast();
+                                    break;
+                                case 3:
+                                    E.Cast(Args.EndPosition);
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (useR)
+                    {
+                        if (target != null && target.IsValidTarget(R.Range))
+                        {
+                            switch (MMenu["urspells"]["rsettss"]["chooseplzr"].Value)
+                            {
+                                case 0:
+                                    R.Cast(target);
+                                    break;
+                                case 1:
+                                    var pos = Player.ServerPosition +
+                                              (Player.ServerPosition - Args.EndPosition).Normalized() * R.Range;
+                                    R.Cast(pos);
+                                    break;
+                                case 2:
+                                    R.Cast();
+                                    break;
+                                case 3:
+                                    R.Cast(Args.EndPosition);
                                     break;
                             }
                         }
                     }
                 }
-
-                if (useW)
-                {
-                    if (target != null && target.IsValidTarget(W.Range))
-                    {
-                        switch (MMenu["urspells"]["wsettss"]["chooseplzw"].Value)
-                        {
-                            case 0:
-                                W.Cast(target);
-                                break;
-                            case 1:
-                                var pos = Player.ServerPosition +
-                                          (Player.ServerPosition - Args.EndPosition).Normalized() * W.Range;
-                                W.Cast(pos);
-                                break;
-                            case 2:
-                                W.Cast();
-                                break;
-                            case 3:
-                                W.Cast(Args.EndPosition);
-                                break;
-                        }
-                    }
-                }
-
-                if (useE)
-                {
-                    if (target != null && target.IsValidTarget(E.Range))
-                    {
-                        switch (MMenu["urspells"]["esettss"]["chooseplze"].Value)
-                        {
-                            case 0:
-                                E.Cast(target);
-                                break;
-                            case 1:
-                                var pos = Player.ServerPosition +
-                                          (Player.ServerPosition - Args.EndPosition).Normalized() * E.Range;
-                                E.Cast(pos);
-                                break;
-                            case 2:
-                                E.Cast();
-                                break;
-                            case 3:
-                                E.Cast(Args.EndPosition);
-                                break;
-                        }
-                    }
-                }
-
-                if (useR)
-                {
-                    if (target != null && target.IsValidTarget(R.Range))
-                    {
-                        switch (MMenu["urspells"]["rsettss"]["chooseplzr"].Value)
-                        {
-                            case 0:
-                                R.Cast(target);
-                                break;
-                            case 1:
-                                var pos = Player.ServerPosition +
-                                          (Player.ServerPosition - Args.EndPosition).Normalized() * R.Range;
-                                R.Cast(pos);
-                                break;
-                            case 2:
-                                R.Cast();
-                                break;
-                            case 3:
-                                R.Cast(Args.EndPosition);
-                                break;
-                        }
-                    }
-                }
             }
-
             if (MMenu["urspells"]["onlyifcombo"].Enabled)
             {
                 if (Orbwalker.Implementation.Mode == OrbwalkingMode.Combo)

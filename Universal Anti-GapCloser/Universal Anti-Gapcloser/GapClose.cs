@@ -10,6 +10,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Aimtec.SDK.Util;
 
     #endregion
 
@@ -970,6 +971,10 @@
 
                     heroMenu.Add(new MenuBool("Gapcloser" + enemy.ChampionName.ToLower() + "." + spell.SpellName.ToLower(),
                         "Anti Slot: " + spell.Slot + "(" + spell.SpellName + ")"));
+
+                    heroMenu.Add(new MenuSlider("Delay" + enemy.ChampionName.ToLower() + "." + spell.SpellName.ToLower(),
+                        "Delay", 0, 0, 2000));
+
                 }
             }
 
@@ -1117,10 +1122,16 @@
                 return;
             }
 
+            bool canuse = false;
+
             if (!Gapclosers.ContainsKey(sender.NetworkId))
             {
-                Gapclosers.Add(sender.NetworkId, new GapcloserArgs());
+                DelayAction.Queue(Menu["Delay" + sender.UnitSkinName.ToLower()].As<Menu>()
+                 ["Gapcloser" + sender.UnitSkinName.ToLower() + "." + Args.SpellData.Name.ToLower()].As<MenuSlider>().Value, () =>
+                 canuse = true);
+                Gapclosers.Add(sender.NetworkId, new GapcloserArgs()));
             }
+
 
             Gapclosers[sender.NetworkId].Unit = (Obj_AI_Hero)sender;
             Gapclosers[sender.NetworkId].Slot = Args.SpellSlot;
