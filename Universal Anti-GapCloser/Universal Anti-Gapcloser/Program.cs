@@ -71,10 +71,7 @@ namespace Universal_Anti_Gapcloser
                 return;
             }
 
-            if (Game.TickCount >= something)
-            {
-                canuse = false;
-            }
+
 
             Q.Range = MMenu["urspells"]["qsettss"]["qrange"].As<MenuSlider>().Value;
             W.Range = MMenu["urspells"]["wsettss"]["wrange"].As<MenuSlider>().Value;
@@ -88,125 +85,128 @@ namespace Universal_Anti_Gapcloser
 
         private static void Gapclose(Obj_AI_Base target, GapcloserArgs Args)
         {
-            if (canuse)
+
+
+            bool useW = MMenu["urspells"]["wsettss"]["wUsage"].Enabled;
+            bool useE = MMenu["urspells"]["esettss"]["eUsage"].Enabled;
+            bool useR = MMenu["urspells"]["rsettss"]["rUsage"].Enabled;
+            bool useQ = MMenu["urspells"]["qsettss"]["qUsage"].Enabled;
+            if (!MMenu["urspells"]["onlyifcombo"].Enabled)
             {
-
-                bool useW = MMenu["urspells"]["wsettss"]["wUsage"].Enabled;
-                bool useE = MMenu["urspells"]["esettss"]["eUsage"].Enabled;
-                bool useR = MMenu["urspells"]["rsettss"]["rUsage"].Enabled;
-                bool useQ = MMenu["urspells"]["qsettss"]["qUsage"].Enabled;
-                if (!MMenu["urspells"]["onlyifcombo"].Enabled)
+                if (useQ)
                 {
-                    if (useQ)
+
+                    if (target != null)
                     {
 
-                        if (target != null)
+                        if (target.IsValidTarget(Q.Range))
                         {
 
-                            if (target.IsValidTarget(Q.Range))
-                            {
-
-                                switch (MMenu["urspells"]["qsettss"]["chooseplzq"].Value)
-                                {
-                                    case 0:
-                                        Q.Cast(target);
-                                        break;
-                                    case 1:
-                                        var pos = Player.ServerPosition +
-                                                  (Player.ServerPosition - Args.EndPosition).Normalized() * Q.Range;
-                                        Q.Cast(pos);
-                                        break;
-                                    case 2:
-                                        Q.Cast();
-                                        break;
-                                    case 3:
-                                        Q.Cast(Args.EndPosition);
-
-                                        break;
-                                }
-                            }
-                        }
-                    }
-
-                    if (useW)
-                    {
-                        if (target != null && target.IsValidTarget(W.Range))
-                        {
-                            switch (MMenu["urspells"]["wsettss"]["chooseplzw"].Value)
+                            switch (MMenu["urspells"]["qsettss"]["chooseplzq"].Value)
                             {
                                 case 0:
-                                    W.Cast(target);
+                                    DelayAction.Queue(something, () => Q.Cast(target));
+                                    
                                     break;
                                 case 1:
                                     var pos = Player.ServerPosition +
-                                              (Player.ServerPosition - Args.EndPosition).Normalized() * W.Range;
-                                    W.Cast(pos);
+                                              (Player.ServerPosition - Args.EndPosition).Normalized() * Q.Range;
+                                    DelayAction.Queue(something, () => Q.Cast(pos));
                                     break;
                                 case 2:
-                                    W.Cast();
+                                    DelayAction.Queue(something, () => Q.Cast());
                                     break;
                                 case 3:
-                                    W.Cast(Args.EndPosition);
-                                    break;
-                            }
-                        }
-                    }
+                                    DelayAction.Queue(something, () => Q.Cast(Args.EndPosition));
 
-                    if (useE)
-                    {
-                        if (target != null && target.IsValidTarget(E.Range))
-                        {
-                            switch (MMenu["urspells"]["esettss"]["chooseplze"].Value)
-                            {
-                                case 0:
-                                    E.Cast(target);
-                                    break;
-                                case 1:
-                                    var pos = Player.ServerPosition +
-                                              (Player.ServerPosition - Args.EndPosition).Normalized() * E.Range;
-                                    E.Cast(pos);
-                                    break;
-                                case 2:
-                                    E.Cast();
-                                    break;
-                                case 3:
-                                    E.Cast(Args.EndPosition);
-                                    break;
-                            }
-                        }
-                    }
-
-                    if (useR)
-                    {
-                        if (target != null && target.IsValidTarget(R.Range))
-                        {
-                            switch (MMenu["urspells"]["rsettss"]["chooseplzr"].Value)
-                            {
-                                case 0:
-                                    R.Cast(target);
-                                    break;
-                                case 1:
-                                    var pos = Player.ServerPosition +
-                                              (Player.ServerPosition - Args.EndPosition).Normalized() * R.Range;
-                                    R.Cast(pos);
-                                    break;
-                                case 2:
-                                    R.Cast();
-                                    break;
-                                case 3:
-                                    R.Cast(Args.EndPosition);
                                     break;
                             }
                         }
                     }
                 }
+
+                if (useW)
+                {
+                    if (target != null && target.IsValidTarget(W.Range))
+                    {
+                        switch (MMenu["urspells"]["wsettss"]["chooseplzw"].Value)
+                        {
+                            case 0:
+                                DelayAction.Queue(something, () => W.Cast(target));
+
+                                break;
+                            case 1:
+                                var pos = Player.ServerPosition +
+                                          (Player.ServerPosition - Args.EndPosition).Normalized() * W.Range;
+                                DelayAction.Queue(something, () => W.Cast(pos));
+                                break;
+                            case 2:
+                                DelayAction.Queue(something, () => W.Cast());
+                                break;
+                            case 3:
+                                DelayAction.Queue(something, () => W.Cast(Args.EndPosition));
+
+                                break;
+                        }
+                    }
+                }
+
+                if (useE)
+                {
+                    if (target != null && target.IsValidTarget(E.Range))
+                    {
+                        switch (MMenu["urspells"]["esettss"]["chooseplze"].Value)
+                        {
+                            case 0:
+                                DelayAction.Queue(something, () => E.Cast(target));
+
+                                break;
+                            case 1:
+                                var pos = Player.ServerPosition +
+                                          (Player.ServerPosition - Args.EndPosition).Normalized() * E.Range;
+                                DelayAction.Queue(something, () => E.Cast(pos));
+                                break;
+                            case 2:
+                                DelayAction.Queue(something, () => E.Cast());
+                                break;
+                            case 3:
+                                DelayAction.Queue(something, () => E.Cast(Args.EndPosition));
+
+                                break;
+                        }
+                    }
+                }
+
+                if (useR)
+                {
+                    if (target != null && target.IsValidTarget(R.Range))
+                    {
+                        switch (MMenu["urspells"]["rsettss"]["chooseplzr"].Value)
+                        {
+                            case 0:
+                                DelayAction.Queue(something, () => R.Cast(target));
+
+                                break;
+                            case 1:
+                                var pos = Player.ServerPosition +
+                                          (Player.ServerPosition - Args.EndPosition).Normalized() * R.Range;
+                                DelayAction.Queue(something, () => R.Cast(pos));
+                                break;
+                            case 2:
+                                DelayAction.Queue(something, () => R.Cast());
+                                break;
+                            case 3:
+                                DelayAction.Queue(something, () => R.Cast(Args.EndPosition));
+
+                                break;
+                        }
+                    }
+                }
             }
+
             if (MMenu["urspells"]["onlyifcombo"].Enabled)
             {
-                bool useW = MMenu["urspells"]["wsettss"]["wUsage"].Enabled;
-                bool useE = MMenu["urspells"]["esettss"]["eUsage"].Enabled;
-                bool useR = MMenu["urspells"]["rsettss"]["rUsage"].Enabled;
-                bool useQ = MMenu["urspells"]["qsettss"]["qUsage"].Enabled;
+               
                 if (Orbwalker.Implementation.Mode == OrbwalkingMode.Combo)
                 {
                     if (useQ)
@@ -221,18 +221,20 @@ namespace Universal_Anti_Gapcloser
                                 switch (MMenu["urspells"]["qsettss"]["chooseplzq"].Value)
                                 {
                                     case 0:
-                                        Q.Cast(target);
+                                        DelayAction.Queue(something, () => Q.Cast(target));
+
                                         break;
                                     case 1:
                                         var pos = Player.ServerPosition +
                                                   (Player.ServerPosition - Args.EndPosition).Normalized() * Q.Range;
-                                        Q.Cast(pos);
+                                        DelayAction.Queue(something, () => Q.Cast(pos));
                                         break;
                                     case 2:
-                                        Q.Cast();
+                                        DelayAction.Queue(something, () => Q.Cast());
                                         break;
                                     case 3:
-                                        Q.Cast(Args.EndPosition);
+                                        DelayAction.Queue(something, () => Q.Cast(Args.EndPosition));
+
                                         break;
                                 }
                             }
@@ -246,18 +248,20 @@ namespace Universal_Anti_Gapcloser
                             switch (MMenu["urspells"]["wsettss"]["chooseplzw"].Value)
                             {
                                 case 0:
-                                    W.Cast(target);
+                                    DelayAction.Queue(something, () => W.Cast(target));
+
                                     break;
                                 case 1:
                                     var pos = Player.ServerPosition +
                                               (Player.ServerPosition - Args.EndPosition).Normalized() * W.Range;
-                                    W.Cast(pos);
+                                    DelayAction.Queue(something, () => W.Cast(pos));
                                     break;
                                 case 2:
-                                    W.Cast();
+                                    DelayAction.Queue(something, () => W.Cast());
                                     break;
                                 case 3:
-                                    W.Cast(Args.EndPosition);
+                                    DelayAction.Queue(something, () => W.Cast(Args.EndPosition));
+
                                     break;
                             }
                         }
@@ -270,18 +274,20 @@ namespace Universal_Anti_Gapcloser
                             switch (MMenu["urspells"]["esettss"]["chooseplze"].Value)
                             {
                                 case 0:
-                                    E.Cast(target);
+                                    DelayAction.Queue(something, () => E.Cast(target));
+
                                     break;
                                 case 1:
                                     var pos = Player.ServerPosition +
                                               (Player.ServerPosition - Args.EndPosition).Normalized() * E.Range;
-                                    E.Cast(pos);
+                                    DelayAction.Queue(something, () => E.Cast(pos));
                                     break;
                                 case 2:
-                                    E.Cast();
+                                    DelayAction.Queue(something, () => E.Cast());
                                     break;
                                 case 3:
-                                    E.Cast(Args.EndPosition);
+                                    DelayAction.Queue(something, () => E.Cast(Args.EndPosition));
+
                                     break;
                             }
                         }
@@ -294,18 +300,20 @@ namespace Universal_Anti_Gapcloser
                             switch (MMenu["urspells"]["rsettss"]["chooseplzr"].Value)
                             {
                                 case 0:
-                                    R.Cast(target);
+                                    DelayAction.Queue(something, () => R.Cast(target));
+
                                     break;
                                 case 1:
                                     var pos = Player.ServerPosition +
                                               (Player.ServerPosition - Args.EndPosition).Normalized() * R.Range;
-                                    R.Cast(pos);
+                                    DelayAction.Queue(something, () => R.Cast(pos));
                                     break;
                                 case 2:
-                                    R.Cast();
+                                    DelayAction.Queue(something, () => R.Cast());
                                     break;
                                 case 3:
-                                    R.Cast(Args.EndPosition);
+                                    DelayAction.Queue(something, () => R.Cast(Args.EndPosition));
+
                                     break;
                             }
                         }
@@ -315,3 +323,4 @@ namespace Universal_Anti_Gapcloser
         }
     }
 }
+
