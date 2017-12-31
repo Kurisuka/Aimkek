@@ -1126,14 +1126,15 @@
 
             if (!Gapclosers.ContainsKey(sender.NetworkId))
             {
-                DelayAction.Queue(Menu["Delay" + sender.UnitSkinName.ToLower()].As<Menu>()
-                               ["Gapcloser" + sender.UnitSkinName.ToLower() + "." + Args.SpellData.Name.ToLower()].As<MenuSlider>()
-                               .Value, () =>
-                               {
-                                   canuse = true;
-                                   something = Game.TickCount + 3000;
-                               });
+
                 Gapclosers.Add(sender.NetworkId, new GapcloserArgs());
+               DelayAction.Queue(Menu["Gapcloser" + sender.UnitSkinName.ToLower()].As<Menu>()
+               ["Delay" + sender.UnitSkinName.ToLower() + "." + Args.SpellData.Name.ToLower()].As<MenuSlider>()
+               .Value, () =>
+               {
+                   canuse = true;
+                   something = Game.TickCount + 3000;
+               });
             }
 
 
