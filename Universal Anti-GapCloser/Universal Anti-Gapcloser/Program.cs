@@ -71,9 +71,9 @@ namespace Universal_Anti_Gapcloser
                 return;
             }
 
-            if (Game.TickCount >= Game.TickCount + 3000)
+            if (Game.TickCount >= something)
             {
-                Universal_Anti_Gapcloser.Gapcloser.canuse = false;
+                canuse = false;
             }
 
             Q.Range = MMenu["urspells"]["qsettss"]["qrange"].As<MenuSlider>().Value;
@@ -88,7 +88,7 @@ namespace Universal_Anti_Gapcloser
 
         private static void Gapclose(Obj_AI_Base target, GapcloserArgs Args)
         {
-            if (Universal_Anti_Gapcloser.Gapcloser.canuse)
+            if (canuse)
             {
 
                 bool useW = MMenu["urspells"]["wsettss"]["wUsage"].Enabled;
@@ -203,6 +203,10 @@ namespace Universal_Anti_Gapcloser
             }
             if (MMenu["urspells"]["onlyifcombo"].Enabled)
             {
+                bool useW = MMenu["urspells"]["wsettss"]["wUsage"].Enabled;
+                bool useE = MMenu["urspells"]["esettss"]["eUsage"].Enabled;
+                bool useR = MMenu["urspells"]["rsettss"]["rUsage"].Enabled;
+                bool useQ = MMenu["urspells"]["qsettss"]["qUsage"].Enabled;
                 if (Orbwalker.Implementation.Mode == OrbwalkingMode.Combo)
                 {
                     if (useQ)
