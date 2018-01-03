@@ -35,11 +35,11 @@ namespace Lil_Vladimir
 
         public void LoadSpells()
         {
-            Q = new Spell(SpellSlot.Q, 600);
-            W = new Spell(SpellSlot.W);
-            E = new Spell(SpellSlot.E, 600);
-            R = new Spell(SpellSlot.R, 700);
-            R.SetSkillshot(0.25f, 175, float.MaxValue, false, SkillshotType.Circle);
+            Q = new Spell(SpellSlot.Q, 600f);
+            W = new Spell(SpellSlot.W, 350f);
+            E = new Spell(SpellSlot.E, 610f);
+            R = new Spell(SpellSlot.R, 625f);
+            R.SetSkillshot(0.25f, 175f, 700f, false, SkillshotType.Circle);
 
         }
 
@@ -71,8 +71,8 @@ namespace Lil_Vladimir
 
             var HarassStuff = new Menu("harass", "Harass Settings");
             {
-                HarassStuff.Add(new Menu("useQ", "Use Q to Harass"));
-                HarassStuff.Add(new Menu("UseE", "Use E to Harass"));
+                HarassStuff.Add(new MenuBool("useQ", "Use Q to Harass"));
+                HarassStuff.Add(new MenuBool("UseE", "Use E to Harass"));
 
             }
             MMenu.Add(HarassStuff);
@@ -134,12 +134,29 @@ namespace Lil_Vladimir
 
             Render.OnPresent += Render_OnPresent;
             Game.OnUpdate += Game_OnUpdate;
-            //Gapcloser.OnGapcloser += Gapclose;
+            Gapcloser.OnGapcloser += OnGapcloser;
 
             LoadSpells();
             Console.WriteLine("Lil Vladimir - Loaded");
         }
+
+        private void OnGapcloser(Obj_AI_Hero target, GapcloserArgs Args)
+        {
+            if (target != null && Args.EndPosition.Distance(Player) < W.Range && W.Ready)
+            {
+
+                W.Cast();
+
+
+            }
+
+        }
         #region bunch of statics
+        internal static int lastETime { get; set; }
+        internal static bool isEActive
+            =>
+          ObjectManager.GetLocalPlayer().Buffs.Any(x => x.IsActive && x.Name.ToLower() == "vladimire") ||
+          Game.TickCount - lastETime <= 1200 + Game.Ping;
         public static readonly List<string> SpecialChampions = new List<string> { "Annie", "Jhin" };
         public static Obj_AI_Hero GetBestEnemyHeroTarget()
         {
@@ -277,6 +294,12 @@ namespace Lil_Vladimir
             {
                 return;
             }
+            if (Player.HasBuff("VladimirSanguinePool"))
+            {
+                Orbwalker.Implementation.AttackingEnabled = false;
+            }
+            else
+                Orbwalker.Implementation.AttackingEnabled = true;
             DoKillsteal();
 
             switch (Orbwalker.Mode)
@@ -306,9 +329,12 @@ namespace Lil_Vladimir
                     {
                         var target = GetBestEnemyHeroTargetInRange(R.Range - 20);
 
-                        if (target.IsValidTarget())
+                        if (target.IsValidTarget() && target != null)
                         {
-                            if (target != null) R.Cast(target);
+                            var rPred = R.GetPrediction(target);
+
+                            if (rPred.HitChance >= HitChance.High)
+                                R.Cast(rPred.CastPosition);
                         }
 
                     }
@@ -336,7 +362,11 @@ namespace Lil_Vladimir
                     Player.GetSpellDamage(bestTarget, SpellSlot.E) >= bestTarget.Health &&
                     bestTarget.IsValidTarget(E.Range - 10))
                 {
-                    E.Cast();
+                    if (isEActive)
+
+                    {
+                        E.Cast();
+                    }
                 }
 
             }
@@ -384,6 +414,7 @@ namespace Lil_Vladimir
                         {
                             W.Cast();
                         }
+
                     }
                 }
             }
@@ -395,9 +426,10 @@ namespace Lil_Vladimir
                     {
                         if (target.IsInRange(E.Range - 10))
                         {
-                            if (E.IsChargedSpell)
+                            if (isEActive)
                             {
-                                E.Cast();
+                                if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                                    E.Cast();
                             }
                         }
                     }
@@ -405,9 +437,9 @@ namespace Lil_Vladimir
             }
             if (useR)
             {
-                if (useRkillable && target.Health < Player.GetSpellDamage(target, SpellSlot.R))
+                if (target != null && useRkillable && target.Health < Player.GetSpellDamage(target, SpellSlot.R))
                 {
-                    if (target != null)
+                    //if (target != null)
                     {
                         if (target.IsValidTarget() && target.IsInRange(R.Range - 10))
                         {
@@ -453,8 +485,11 @@ namespace Lil_Vladimir
                 {
                     if (target.IsInRange(E.Range - 15) && target.IsValidTarget())
                     {
-
-                        E.Cast();
+                        if (isEActive)
+                        {
+                            if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                                E.Cast();
+                        }
                     }
 
                 }
@@ -464,7 +499,7 @@ namespace Lil_Vladimir
         #region lasthit
         private void DoLasthit()
         {
-            bool useQ = MMenu["lasthit"]["useQ"].Enabled;
+            bool useQ = MMenu["lasthit"]["lasthitQ"].Enabled;
 
             if (useQ)
             {
@@ -496,9 +531,15 @@ namespace Lil_Vladimir
                 {
                     W.Cast();
                 }
+
+
                 if (useE && jungleTarget.IsValidTarget(E.Range))
                 {
-                    E.Cast();
+                    if (isEActive)
+                    {
+                        if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                            E.Cast();
+                    }
                 }
             }
 
@@ -533,6 +574,7 @@ namespace Lil_Vladimir
                         {
                             W.Cast();
                         }
+
                     }
                 }
             }
@@ -546,7 +588,11 @@ namespace Lil_Vladimir
                                 t.IsValidTarget(190, false, false, minion.ServerPosition)) >=
                             MMenu["laneclear"]["mintoE"].Value)
                         {
-                            E.Cast();
+                            if (isEActive)
+                            {
+                                if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                                    E.Cast();
+                            }
                         }
                     }
                 }
