@@ -86,9 +86,9 @@ namespace Lil_Vladimir
                 LaneClear.Add(new MenuBool("useQ", "Use Q to Clear Lane"));
 
                 LaneClear.Add(new MenuBool("useW", "Use W to Clear Lane"));
-                LaneClear.Add(new MenuSliderBool("mintow", "X  Minions to W", true, 1, 1, 10));
+                LaneClear.Add(new MenuSlider("mintow", "X  Minions to W", 1, 1, 10));
                 LaneClear.Add(new MenuBool("useE", "Use E to Clear Lane"));
-                LaneClear.Add(new MenuSliderBool("mintoe", "X Minions to E", true, 1, 1, 10));
+                LaneClear.Add(new MenuSlider("mintoe", "X Minions to E", 1, 1, 10));
             }
             MMenu.Add(LaneClear);
 
@@ -117,7 +117,7 @@ namespace Lil_Vladimir
             }
             MMenu.Add(Drawings);
 
-            //Gapcloser.Attach(MMenu, "W Anti-Gap");
+            Gapcloser.Attach(MMenu, "W Anti-Gap");
 
             /*var skins = await GetSkins(Player.ChampionName);
             //misc ting
@@ -152,6 +152,26 @@ namespace Lil_Vladimir
 
         }
         #region bunch of statics
+        private static void OnCastSpell(Obj_AI_Base sender, SpellBookCastSpellEventArgs Args)
+        {
+            if (sender.IsMe)
+            {
+                if (Args.Slot == SpellSlot.E)
+                {
+                    lastETime = Game.TickCount;
+                }
+            }
+        }
+        private static void OnProcessSpellCast(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs Args)
+        {
+                if (sender.IsMe)
+                {
+                    if (Args.SpellSlot == SpellSlot.E)
+                    {
+                        lastETime = Game.TickCount;
+                    }
+                }
+        }
         internal static int lastETime { get; set; }
         internal static bool isEActive
             =>
@@ -300,6 +320,12 @@ namespace Lil_Vladimir
             }
             else
                 Orbwalker.Implementation.AttackingEnabled = true;
+            if (Player.HasBuff("VladimirE"))
+            {
+                Orbwalker.Implementation.AttackingEnabled = false;
+            }
+            else
+                Orbwalker.Implementation.AttackingEnabled = true;
             DoKillsteal();
 
             switch (Orbwalker.Mode)
@@ -363,9 +389,15 @@ namespace Lil_Vladimir
                     bestTarget.IsValidTarget(E.Range - 10))
                 {
                     if (isEActive)
-
                     {
-                        E.Cast();
+                        if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                        {
+                            E.Cast();
+                        }
+                    }
+                    else
+                    {
+                        Player.SpellBook.CastSpell(SpellSlot.E);
                     }
                 }
 
@@ -429,8 +461,15 @@ namespace Lil_Vladimir
                             if (isEActive)
                             {
                                 if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                                {
                                     E.Cast();
+                                }
                             }
+                            else
+                            {
+                                Player.SpellBook.CastSpell(SpellSlot.E);
+                            }
+
                         }
                     }
                 }
@@ -488,8 +527,15 @@ namespace Lil_Vladimir
                         if (isEActive)
                         {
                             if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                            {
                                 E.Cast();
+                            }
                         }
+                        else
+                        {
+                            Player.SpellBook.CastSpell(SpellSlot.E);
+                        }
+
                     }
 
                 }
@@ -523,23 +569,30 @@ namespace Lil_Vladimir
 
             foreach (var jungleTarget in GetGenericJungleMinionsTargetsInRange(Q.Range))
             {
-                if (useQ && jungleTarget.IsValidTarget(Q.Range))
+                if (useQ && jungleTarget.IsValidTarget(Q.Range) && jungleTarget != null && !jungleTarget.UnitSkinName.Contains("Plant"))
                 {
                     Q.Cast(jungleTarget);
                 }
-                if (useW && jungleTarget.IsValidTarget(W.Range))
+                if (useW && jungleTarget.IsValidTarget(W.Range) && jungleTarget != null && !jungleTarget.UnitSkinName.Contains("Plant"))
                 {
                     W.Cast();
                 }
 
 
-                if (useE && jungleTarget.IsValidTarget(E.Range))
+                if (useE && jungleTarget.IsValidTarget(E.Range) && jungleTarget != null && !jungleTarget.UnitSkinName.Contains("Plant"))
                 {
                     if (isEActive)
                     {
                         if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                        {
                             E.Cast();
+                        }
                     }
+                    else
+                    {
+                        Player.SpellBook.CastSpell(SpellSlot.E);
+                    }
+
                 }
             }
 
@@ -569,8 +622,8 @@ namespace Lil_Vladimir
                     if (minion.IsValidTarget(W.Range) && minion != null)
                     {
                         if (GameObjects.EnemyMinions.Count(t =>
-                                t.IsValidTarget(190, false, false, minion.ServerPosition)) >=
-                            MMenu["laneclear"]["mintow"].Value)
+                                t.IsValidTarget(W.Range, false, false, Player.ServerPosition)) >=
+                            MMenu["laneclear"]["mintow"].As<MenuSlider>().Value)
                         {
                             W.Cast();
                         }
@@ -585,14 +638,21 @@ namespace Lil_Vladimir
                     if (minion.IsValidTarget(E.Range - 10) && minion != null)
                     {
                         if (GameObjects.EnemyMinions.Count(t =>
-                                t.IsValidTarget(190, false, false, minion.ServerPosition)) >=
-                            MMenu["laneclear"]["mintoE"].Value)
+                                t.IsValidTarget(E.Range, false, false, Player.ServerPosition)) >=
+                            MMenu["laneclear"]["mintoe"].As<MenuSlider>().Value)
                         {
                             if (isEActive)
                             {
                                 if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                                {
                                     E.Cast();
+                                }
                             }
+                            else
+                            {
+                                Player.SpellBook.CastSpell(SpellSlot.E);
+                            }
+
                         }
                     }
                 }
