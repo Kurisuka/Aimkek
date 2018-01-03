@@ -26,7 +26,7 @@ namespace Lil_BloodPump
 
     internal class Vladimir
     {
-        public static Menu MMenu = new Menu("lil Vladimir", "Lil Vladimir", true);
+        public static Menu MMenu = new Menu("lil BloodPump", "Lil BloodPump", true);
         public static Menu DifferentCombos, Misc, Self;
         public static Orbwalker Orbwalker = new Orbwalker();
         public static Obj_AI_Hero Player => ObjectManager.GetLocalPlayer();
@@ -137,7 +137,7 @@ namespace Lil_BloodPump
             Gapcloser.OnGapcloser += OnGapcloser;
 
             LoadSpells();
-            Console.WriteLine("Lil Vladimir - Loaded");
+            Console.WriteLine("Lil BloodPump - Loaded");
         }
 
         private void OnGapcloser(Obj_AI_Hero target, GapcloserArgs Args)
