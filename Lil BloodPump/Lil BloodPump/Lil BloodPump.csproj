@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{95E2AB53-A417-4422-AE7F-E6364A7A2C7B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>lil_Vladimir</RootNamespace>
-    <AssemblyName>lil Vladimir</AssemblyName>
+    <RootNamespace>Lil_BloodPump</RootNamespace>
+    <AssemblyName>Lil BloodPump</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
