@@ -71,8 +71,8 @@ namespace Lil_Vladimir
 
             var HarassStuff = new Menu("harass", "Harass Settings");
             {
-                HarassStuff.Add(new MenuBool("harassQ", "Use Q to Harass"));
-                HarassStuff.Add(new MenuBool("harassE", "Use E to Harass"));
+                HarassStuff.Add(new MenuBool("useQ", "Use Q to Harass"));
+                HarassStuff.Add(new MenuBool("UseE", "Use E to Harass"));
 
             }
             MMenu.Add(HarassStuff);
@@ -503,8 +503,8 @@ namespace Lil_Vladimir
         #region harassting
         private void DoHarass()
         {
-            bool useQ = MMenu["harass"]["harassQ"].Enabled;
-            bool useE = MMenu["harass"]["harassE"].Enabled;
+            bool useQ = MMenu["harass"]["useQ"].Enabled;
+            bool useE = MMenu["harass"]["useE"].Enabled;
 
             if (useQ)
             {
