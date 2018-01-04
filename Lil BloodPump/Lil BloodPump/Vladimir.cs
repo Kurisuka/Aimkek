@@ -370,32 +370,39 @@
         public void DoDraw()
         {
             string drawpos = "";
-            
+            string drawposburst = "";
+            double SpellsDamagge = R.GetDamage(target) + E.GetDamage(target) + W.GetDamage(target) * 2 +
+                               Q.GetDamage(target) * 2;
             if (MMenu["drawings"]["drawRmode"].As<MenuBool>().Enabled)
             {
                 switch (MMenu["combo"]["Rcombo"].As<MenuList>().Value)
                 {
                     case 0:
-                        drawpos = "Combo Mode: Burst";
+                        drawpos = "R Mode: Always";
                         break;
                     case 1:
-                        drawpos = "Combo Mode: Marked Only";
+                        drawpos = "R Mode: Burst";
+                        drawposburst = "Whole Combo Will do " + SpellsDamagge + " Damage to " + target.IsInRange(R.Range);
                         break;
                     case 2:
-                        drawpos = "Combo Mode: Like Flash";
+                        drawpos = "R Mode: Only Killable";
                         break;
                     case 3:
-                        drawpos = "Combo Mode...";
+                        drawpos = "R Mode: if " + MMenu["combo"]["rifhit"].As<MenuSlider>().Value + "Enemies";
                         break;
                 }
             }
 
+            var newpos = Player.FloatingHealthBarPosition;
+            newpos.X += 0;
+            newpos.Y += 200;
             var pos = Player.FloatingHealthBarPosition;
             pos.X += 0;
             pos.Y += 180;
 
 #pragma warning disable CS0618 // Type or member is obsolete
             Render.Text(pos, Color.DeepPink, drawpos);
+            Render.Text(newpos, Color.DarkCyan, drawposburst);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
         public void Game_OnUpdate()
