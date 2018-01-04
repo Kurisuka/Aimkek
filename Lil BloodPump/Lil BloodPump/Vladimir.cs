@@ -18,6 +18,7 @@
     using Spell = Aimtec.SDK.Spell;
     using static Lil_BloodPump.Program;
     using Aimtec.SDK.Events;
+    using System.Globalization;
     #endregion
 
     internal class Vladimir
@@ -373,6 +374,7 @@
             string drawposburst = "";
             double SpellsDamagge = R.GetDamage(target) + E.GetDamage(target) + W.GetDamage(target) * 2 +
                                Q.GetDamage(target) * 2;
+
             if (MMenu["drawings"]["drawRmode"].As<MenuBool>().Enabled)
             {
                 switch (MMenu["combo"]["Rcombo"].As<MenuList>().Value)
@@ -382,7 +384,8 @@
                         break;
                     case 1:
                         drawpos = "R Mode: Burst";
-                        drawposburst = "Whole Combo Will do " + SpellsDamagge + " Damage to " + target.IsInRange(R.Range);
+                        if (target != null)
+                        drawposburst = "Whole Combo Will do " + SpellsDamagge.ToString("P", CultureInfo.InvariantCulture) + " Damage to " + target.IsInRange(R.Range);
                         break;
                     case 2:
                         drawpos = "R Mode: Only Killable";
@@ -402,7 +405,7 @@
 
 #pragma warning disable CS0618 // Type or member is obsolete
             Render.Text(pos, Color.DeepPink, drawpos);
-            Render.Text(newpos, Color.DarkCyan, drawposburst);
+            Render.Text(newpos, Color.LightCyan, drawposburst);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
         public void Game_OnUpdate()
