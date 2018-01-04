@@ -150,8 +150,6 @@
                 Drawings.Add(new MenuBool("drawR", "Draw R Range"));
                 Drawings.Add(new MenuBool("drawdamage", "Draw Damage"));
                 Drawings.Add(new MenuBool("drawRmode", "Draw Current R Mode"));
-                Drawings.Add(new MenuSlider("modex", "mode x", 0, -1000, 1000));
-                Drawings.Add(new MenuSlider("modey", "mode y", 0, -1000, 1000));
             }
             MMenu.Add(Drawings);
 
