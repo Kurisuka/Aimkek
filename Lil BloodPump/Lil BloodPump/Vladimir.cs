@@ -60,10 +60,11 @@
 
         public Vladimir()
         {
-            LoadSkinAsync();
+            
 
             
             Orbwalker.Attach(MMenu);
+            LoadSkinAsync();
             var ComboStuff = new Menu("combo", "Combo Settings");
             {
                 ComboStuff.Add(new MenuBool("useQ", "Use Q in Combo"));
@@ -374,7 +375,7 @@
             string drawposburst = "";
             double SpellsDamagge = R.GetDamage(target) + E.GetDamage(target) + W.GetDamage(target) * 2 +
                                Q.GetDamage(target) * 2;
-
+            
             if (MMenu["drawings"]["drawRmode"].As<MenuBool>().Enabled)
             {
                 switch (MMenu["combo"]["Rcombo"].As<MenuList>().Value)
@@ -384,14 +385,15 @@
                         break;
                     case 1:
                         drawpos = "R Mode: Burst";
-                        if (target != null)
-                        drawposburst = "Whole Combo Will do " + SpellsDamagge.ToString("P", CultureInfo.InvariantCulture) + " Damage to " + target.IsInRange(R.Range);
+                        if (target == null) drawposburst = "No Enemies In Range for Combo";
+                        else if (SpellsDamagge < target.Health) drawposburst = "Not enough damage to kill " + target.ChampionName + " with Combo";
+                        else drawposburst = "Combo will kill " + target.ChampionName;
                         break;
                     case 2:
                         drawpos = "R Mode: Only Killable";
                         break;
                     case 3:
-                        drawpos = "R Mode: if " + MMenu["combo"]["rifhit"].As<MenuSlider>().Value + "Enemies";
+                        drawpos = "R Mode: if "+ MMenu["combo"]["rifhit"].As<MenuSlider>().Value + " Enemies";
                         break;
                 }
             }
@@ -405,7 +407,7 @@
 
 #pragma warning disable CS0618 // Type or member is obsolete
             Render.Text(pos, Color.DeepPink, drawpos);
-            Render.Text(newpos, Color.LightCyan, drawposburst);
+            Render.Text(newpos, Color.Cyan, drawposburst);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
         public void Game_OnUpdate()
@@ -468,6 +470,12 @@
                         return;
                     }
                     if (MMenu["combo"]["Rcombo"].As<MenuList>().Value == 2)
+                    {
+                        MMenu["combo"]["Rcombo"].As<MenuList>().Value = 3;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (MMenu["combo"]["Rcombo"].As<MenuList>().Value == 3)
                     {
                         MMenu["combo"]["Rcombo"].As<MenuList>().Value = 0;
                         Uhh = Game.TickCount + 300;
@@ -556,58 +564,6 @@
             //bool useRkillable = MMenu["combo"]["useRkillable"].Enabled;
             //bool useRifhit = MMenu["combo"]["rifhit"].As<MenuSliderBool>().Enabled;
             int CountChampR = MMenu["combo"]["rifhit"].As<MenuSlider>().Value;
-
-            if (useQ && Q.Ready)
-            {
-                if (target != null)
-                {
-                    if (target.IsValidTarget())
-                    {
-                        if (target.IsInRange(Q.Range))
-                        {
-                            Q.Cast(target);
-                        }
-                    }
-                }
-            }
-            if (useW && W.Ready)
-            {
-                if (target != null)
-                {
-                    if (target.IsValidTarget())
-                    {
-                        if (target.IsInRange(W.Range - 10))
-                        {
-                            W.Cast();
-                        }
-
-                    }
-                }
-            }
-            if (useE && E.Ready)
-            {
-                if (target != null)
-                {
-                    if (target.IsValidTarget())
-                    {
-                        if (target.IsInRange(E.Range - 30))
-                        {
-                            if (isEActive)
-                            {
-                                if (Game.TickCount - lastETime > 1050 + Game.Ping)
-                                {
-                                    E.Cast();
-                                }
-                            }
-                            else
-                            {
-                                Player.SpellBook.CastSpell(SpellSlot.E);
-                            }
-
-                        }
-                    }
-                }
-            }
             if (useR)
             {
                 switch (MMenu["combo"]["Rcombo"].Value)
@@ -670,6 +626,57 @@
 
 
 
+            }
+            if (useQ && Q.Ready)
+            {
+                if (target != null)
+                {
+                    if (target.IsValidTarget())
+                    {
+                        if (target.IsInRange(Q.Range))
+                        {
+                            Q.Cast(target);
+                        }
+                    }
+                }
+            }
+            if (useW && W.Ready)
+            {
+                if (target != null)
+                {
+                    if (target.IsValidTarget())
+                    {
+                        if (target.IsInRange(W.Range - 10))
+                        {
+                            W.Cast();
+                        }
+
+                    }
+                }
+            }
+            if (useE && E.Ready)
+            {
+                if (target != null)
+                {
+                    if (target.IsValidTarget())
+                    {
+                        if (target.IsInRange(E.Range - 30))
+                        {
+                            if (isEActive)
+                            {
+                                if (Game.TickCount - lastETime > 1050 + Game.Ping)
+                                {
+                                    E.Cast();
+                                }
+                            }
+                            else
+                            {
+                                Player.SpellBook.CastSpell(SpellSlot.E);
+                            }
+
+                        }
+                    }
+                }
             }
 
         }
@@ -799,16 +806,17 @@
 
                 foreach (var minion in GetEnemyLaneMinionsTargetsInRange(Q.Range))
                 {
+                    bool notward = !minion.UnitSkinName.Contains("Ward");
                     switch (MMenu["laneclear"]["qsettns"].As<MenuList>().Value)
                         {
                         case 0:
-                            if (minion.IsValidTarget(Q.Range) && minion != null)
+                            if (minion.IsValidTarget(Q.Range) && minion != null && notward)
                             {
                                 Q.Cast(minion);
                             }
                             break;
                         case 1:
-                            if (minion.Health <= Player.GetSpellDamage(minion, SpellSlot.Q))
+                            if (minion.Health <= Player.GetSpellDamage(minion, SpellSlot.Q) && notward)
                             {
                                 Q.CastOnUnit(minion);
                             }
@@ -820,7 +828,8 @@
             {
                 foreach (var minion in GetEnemyLaneMinionsTargetsInRange(W.Range))
                 {
-                    if (minion.IsValidTarget(W.Range) && minion != null)
+                    bool notward = !minion.UnitSkinName.Contains("Ward");
+                    if (minion.IsValidTarget(W.Range) && minion != null && notward)
                     {
                         if (GameObjects.EnemyMinions.Count(t =>
                                 t.IsValidTarget(W.Range, false, false, Player.ServerPosition)) >=
@@ -836,7 +845,8 @@
             {
                 foreach (var minion in GetEnemyLaneMinionsTargetsInRange(E.Range))
                 {
-                    if (minion.IsValidTarget(E.Range - 10) && minion != null)
+                    bool notward = !minion.UnitSkinName.Contains("Ward");
+                    if (minion.IsValidTarget(E.Range - 10) && minion != null && notward)
                     {
                         if (GameObjects.EnemyMinions.Count(t =>
                                 t.IsValidTarget(E.Range, false, false, Player.ServerPosition)) >=
