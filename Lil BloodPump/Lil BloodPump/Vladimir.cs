@@ -1,37 +1,37 @@
-﻿using System.Net.Configuration;
-using System.Resources;
-using System.Security.Authentication.ExtendedProtection;
-
-namespace Lil_BloodPump
+﻿namespace Lil_BloodPump
 {
     #region aimtec usings and stuff
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-
     using Aimtec;
     using Aimtec.SDK.Damage;
     using Aimtec.SDK.Extensions;
     using Aimtec.SDK.Menu;
     using Aimtec.SDK.Menu.Components;
     using Aimtec.SDK.Orbwalking;
-    using Aimtec.SDK.TargetSelector;
-    using Aimtec.SDK.Util.Cache;
     using Aimtec.SDK.Prediction.Skillshots;
+    using Aimtec.SDK.TargetSelector;
     using Aimtec.SDK.Util;
-
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Linq;
+    using static Lil_BloodPump.DamageCalcs;
     using Spell = Aimtec.SDK.Spell;
+    using static Lil_BloodPump.Program;
+    using Aimtec.SDK.Events;
     #endregion
 
     internal class Vladimir
     {
+        private int Uhh;
         public static Menu MMenu = new Menu("lil BloodPump", "Lil BloodPump", true);
         public static Menu DifferentCombos, Misc, Self;
         public static Orbwalker Orbwalker = new Orbwalker();
         public static Obj_AI_Hero Player => ObjectManager.GetLocalPlayer();
         public Obj_AI_Hero target => TargetSelector.GetTarget(925);
         public static Spell Q, W, E, R;
+                    
+
+
 
         public void LoadSpells()
         {
@@ -42,9 +42,26 @@ namespace Lil_BloodPump
             R.SetSkillshot(0.25f, 175f, 700f, false, SkillshotType.Circle);
 
         }
+        public async void LoadSkinAsync()
+        {
+
+            var skins = await (Skinhax.GetSkins(Player.ChampionName));
+            Misc = new Menu("misc", "Skin Changer");
+            {
+                Misc.Add(new MenuSeperator("skinting", "Choose your skin:"));
+                Self = new Menu("self", "Skins") {
+                        new MenuList("mySkin", "Champion Skin", skins, 0)};
+                Self["mySkin"].OnValueChanged += (sender, args) => Game.OnUpdate += UpdateSkin;
+                Misc.Add(Self);
+                //Misc.Add(new MenuSeperator("soon", "SoonBIK"));
+            }
+        }
 
         public Vladimir()
         {
+            LoadSkinAsync();
+
+            
             Orbwalker.Attach(MMenu);
             var ComboStuff = new Menu("combo", "Combo Settings");
             {
@@ -52,12 +69,19 @@ namespace Lil_BloodPump
                 ComboStuff.Add(new MenuBool("useW", "Use W in Combo"));
                 ComboStuff.Add(new MenuBool("useE", "Use E in Combo"));
                 ComboStuff.Add(new MenuBool("useR", "Use R in Combo"));
-                ComboStuff.Add(new MenuSeperator("rsetts"));
-                ComboStuff.Add(new MenuBool("useRkillable", "Only if Killable in 1v1 Situations"));
-                //ComboStuff.Add(new MenuSlider("Rifhits", "Use R if hits 1-5 enemies", 1, 1, 5));
+                ComboStuff.Add(new MenuSeperator("rsetts", "--Ultimate Settings--"));
+                //ComboStuff.Add(new MenuBool("useRkillable", "Only if Killable in 1v1 Situations"));
+                
+                ComboStuff.Add(new MenuList("Rcombo", "Choose How to Use R ->", new[] { "Always", "1v1 - Burst", "Only Killable", "R if X Enemies" }, 0));
                 //ComboStuff.Add(new MenuSlider("Rifhealth", "Use R if HP %", 50, 50, 100));
+                ComboStuff.Add(new MenuSlider("rifhit", "Use R if will hit x Enemies", 2, 2, 5));
                 ComboStuff.Add(new MenuBool("usercast", "Use Semi-Cast R"));
+                ComboStuff.Add(new MenuSeperator("keybinds", "--Keybinds--"));
                 ComboStuff.Add(new MenuKeyBind("rcast", "Semi-Cast R", KeyCode.T, KeybindType.Press));
+                ComboStuff.Add(new MenuKeyBind("Rchange", "Change R Mode", KeyCode.G, KeybindType.Press));
+
+
+
 
                 #region maybe later
                 /*DifferentCombos = new Menu("diffcombos", "Combo Logic");
@@ -72,6 +96,7 @@ namespace Lil_BloodPump
             var HarassStuff = new Menu("harass", "Harass Settings");
             {
                 HarassStuff.Add(new MenuBool("harassQ", "Use Q to Harass"));
+                HarassStuff.Add(new MenuBool("harassQlasthit", "Lasthit if No Enemy Near"));
                 HarassStuff.Add(new MenuBool("harassE", "Use E to Harass"));
 
             }
@@ -84,7 +109,7 @@ namespace Lil_BloodPump
             var LaneClear = new Menu("laneclear", "LaneClear Settings");
             {
                 LaneClear.Add(new MenuBool("useQ", "Use Q to Clear Lane"));
-
+                LaneClear.Add(new MenuList("qsettns", "Choose One -> ", new[] { "Always", "Only Lasthit" }, 0));
                 LaneClear.Add(new MenuBool("useW", "Use W to Clear Lane"));
                 LaneClear.Add(new MenuSlider("mintow", "X  Minions to W", 1, 1, 10));
                 LaneClear.Add(new MenuBool("useE", "Use E to Clear Lane"));
@@ -107,6 +132,7 @@ namespace Lil_BloodPump
                 Killsteal.Add(new MenuBool("useR", "Use R to Killsteal"));
             }
             MMenu.Add(Killsteal);
+            MMenu.Add(Misc);
 
             var Drawings = new Menu("drawings", "Drawings Settings");
             {
@@ -114,27 +140,24 @@ namespace Lil_BloodPump
                 Drawings.Add(new MenuBool("drawE", "Draw E Range"));
                 Drawings.Add(new MenuBool("drawR", "Draw R Range"));
                 Drawings.Add(new MenuBool("drawdamage", "Draw Damage"));
+                Drawings.Add(new MenuBool("drawRmode", "Draw Current R Mode"));
+                Drawings.Add(new MenuSlider("modex", "mode x", 0, -1000, 1000));
+                Drawings.Add(new MenuSlider("modey", "mode y", 0, -1000, 1000));
             }
             MMenu.Add(Drawings);
 
             Gapcloser.Attach(MMenu, "W Anti-Gap");
 
-            /*var skins = await GetSkins(Player.ChampionName);
+            
             //misc ting
-            Misc = new Menu("misc", "Miscellaneous");
-            {
-                Misc.Add(new MenuSeperator("skinting", "Choose your skin:"));
-                Self = new Menu("self", "Skins") {
-                        new MenuList("mySkin", "Champion Skin", skins, 0)};
-                Self["mySkin"].OnValueChanged += (sender, args) => Game.OnUpdate += UpdateSkin;
-                Misc.Add(Self);
-            }*/
-
             MMenu.Attach();
-
+            
+            
             Render.OnPresent += Render_OnPresent;
             Game.OnUpdate += Game_OnUpdate;
             Gapcloser.OnGapcloser += OnGapcloser;
+            Game.OnUpdate += Game_OnUpdate;
+
 
             LoadSpells();
             Console.WriteLine("Lil BloodPump - Loaded");
@@ -152,26 +175,58 @@ namespace Lil_BloodPump
 
         }
         #region bunch of statics
+        internal static bool isQActive => ObjectManager.GetLocalPlayer().Buffs.Any(x => x.IsActive && x.Name.ToLower() == "vladimirqfrenzy");
+
         private static void OnCastSpell(Obj_AI_Base sender, SpellBookCastSpellEventArgs Args)
         {
             if (sender.IsMe)
             {
-                if (Args.Slot == SpellSlot.E)
+                if (Args.Slot == SpellSlot.Q)
+                {
+                    if (Orbwalker.Mode != OrbwalkingMode.None)
+                    {
+                        Player.IssueOrder(OrderType.MoveTo, Game.CursorPos);
+                    }
+                }
+                else if (Args.Slot == SpellSlot.E)
                 {
                     lastETime = Game.TickCount;
                 }
             }
         }
+
         private static void OnProcessSpellCast(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs Args)
         {
-                if (sender.IsMe)
+
+            if (sender.IsMe)
+            {
+                if (Args.SpellSlot == SpellSlot.Q)
                 {
-                    if (Args.SpellSlot == SpellSlot.E)
-                    {
-                        lastETime = Game.TickCount;
-                    }
+                    lastQTime = Game.TickCount;
                 }
+                else if (Args.SpellSlot == SpellSlot.E)
+                {
+                    lastETime = Game.TickCount;
+                }
+            }
         }
+        private static void PreAttack(object sender, PreAttackEventArgs Args)
+        {
+            if (Orbwalker.Mode == OrbwalkingMode.Combo)
+            {
+                if (Player.Buffs.Any(x => x.Name == "vladimirqbuild" && x.Count == 2) &&
+                    Player.GetSpell(SpellSlot.Q).CooldownEnd - Game.ClockTime <= 1.5)
+                {
+                    Args.Cancel = true;
+                }
+
+                if (isQActive)
+                {
+                    Args.Cancel = true;
+                }
+            }
+        }
+        internal static int lastQTime { get; set; }
         internal static int lastETime { get; set; }
         internal static bool isEActive
             =>
@@ -255,6 +310,8 @@ namespace Lil_BloodPump
 
         private void Render_OnPresent()
         {
+            DoDraw();
+
             if (MMenu["drawings"]["drawQ"].Enabled)
             {
                 Render.Circle(Player.Position, Q.Range, 40, Color.CornflowerBlue);
@@ -306,10 +363,44 @@ namespace Lil_BloodPump
 
                         });
             }
-        }
 
+            
+
+        }
+        public void DoDraw()
+        {
+            string drawpos = "";
+            
+            if (MMenu["drawings"]["drawRmode"].As<MenuBool>().Enabled)
+            {
+                switch (MMenu["combo"]["Rcombo"].As<MenuList>().Value)
+                {
+                    case 0:
+                        drawpos = "Combo Mode: Burst";
+                        break;
+                    case 1:
+                        drawpos = "Combo Mode: Marked Only";
+                        break;
+                    case 2:
+                        drawpos = "Combo Mode: Like Flash";
+                        break;
+                    case 3:
+                        drawpos = "Combo Mode...";
+                        break;
+                }
+            }
+
+            var pos = Player.FloatingHealthBarPosition;
+            pos.X += 0;
+            pos.Y += 180;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            Render.Text(pos, Color.DeepPink, drawpos);
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
         public void Game_OnUpdate()
         {
+            
             if (Player.IsDead || MenuGUI.IsChatOpen())
             {
                 return;
@@ -317,12 +408,14 @@ namespace Lil_BloodPump
             if (Player.HasBuff("VladimirSanguinePool"))
             {
                 Orbwalker.Implementation.AttackingEnabled = false;
+                Player.IssueOrder(OrderType.MoveTo, Game.CursorPos);
             }
             else
                 Orbwalker.Implementation.AttackingEnabled = true;
             if (Player.HasBuff("VladimirE"))
             {
                 Orbwalker.Implementation.AttackingEnabled = false;
+                Player.IssueOrder(OrderType.MoveTo, Game.CursorPos);
             }
             else
                 Orbwalker.Implementation.AttackingEnabled = true;
@@ -345,6 +438,32 @@ namespace Lil_BloodPump
                     break;
 
 
+            }
+            if (MMenu["combo"]["Rchange"].Enabled)
+            {
+                
+                if (Uhh < Game.TickCount)
+                {
+                    if (MMenu["combo"]["Rcombo"].As<MenuList>().Value == 0)
+                    {
+                        MMenu["combo"]["rcombo"].As<MenuList>().Value = 1;
+                        Uhh = Game.TickCount + 300;
+                        return;
+
+                    }
+                    if (MMenu["combo"]["rcombo"].As<MenuList>().Value == 1)
+                    {
+                        MMenu["combo"]["rcombo"].As<MenuList>().Value = 2;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                    if (MMenu["combo"]["rcombo"].As<MenuList>().Value == 2)
+                    {
+                        MMenu["combo"]["rcombo"].As<MenuList>().Value = 0;
+                        Uhh = Game.TickCount + 300;
+                        return;
+                    }
+                }
             }
 
             if (MMenu["combo"]["usercast"].Enabled)
@@ -424,7 +543,9 @@ namespace Lil_BloodPump
             bool useW = MMenu["combo"]["useW"].Enabled;
             bool useE = MMenu["combo"]["useE"].Enabled;
             bool useR = MMenu["combo"]["useR"].Enabled;
-            bool useRkillable = MMenu["combo"]["useRkillable"].Enabled;
+            //bool useRkillable = MMenu["combo"]["useRkillable"].Enabled;
+            //bool useRifhit = MMenu["combo"]["rifhit"].As<MenuSliderBool>().Enabled;
+            int CountChampR = MMenu["combo"]["rifhit"].As<MenuSlider>().Value;
 
             if (useQ && Q.Ready)
             {
@@ -432,7 +553,10 @@ namespace Lil_BloodPump
                 {
                     if (target.IsValidTarget())
                     {
-                        Q.Cast(target);
+                        if (target.IsInRange(Q.Range))
+                        {
+                            Q.Cast(target);
+                        }
                     }
                 }
             }
@@ -456,7 +580,7 @@ namespace Lil_BloodPump
                 {
                     if (target.IsValidTarget())
                     {
-                        if (target.IsInRange(E.Range - 10))
+                        if (target.IsInRange(E.Range - 30))
                         {
                             if (isEActive)
                             {
@@ -476,26 +600,66 @@ namespace Lil_BloodPump
             }
             if (useR)
             {
-                if (target != null && useRkillable && target.Health < Player.GetSpellDamage(target, SpellSlot.R))
+                switch (MMenu["combo"]["Rcombo"].Value)
                 {
-                    //if (target != null)
-                    {
-                        if (target.IsValidTarget() && target.IsInRange(R.Range - 10))
+                    case 0:
+                        //Always
+                        if (target != null && R.Ready)
                         {
-                            R.Cast(target);
+                            if (target.IsValidTarget(R.Range))
+                            {
+                                var rPred = R.GetPrediction(target);
+
+                                if (rPred.HitChance >= HitChance.High)
+                                {
+                                    R.Cast(rPred.CastPosition);
+                                    return;
+                                }
+                            }
                         }
-                    }
-                }
-                if (!useRkillable && target != null)
-                {
-                    if (target.IsValidTarget())
-                    {
-                        if (target.IsInRange(R.Range - 10))
+                        break;
+                    case 1:
+                        //burst
+                        if (Player.CountEnemyHeroesInRange(600) == 1 && target.IsValidTarget(R.Range))
                         {
-                            R.Cast(target);
+                            if (target.Health <
+                               R.GetDamage(target) + E.GetDamage(target) + W.GetDamage(target) * 2 +
+                               Q.GetDamage(target) * 2)
+                            {
+                                var rPred = R.GetPrediction(target);
+
+                                if (rPred.HitChance >= HitChance.High)
+                                {
+                                    R.Cast(rPred.CastPosition);
+                                    return;
+                                }
+                            }
+
                         }
-                    }
+                        break;
+                    case 2:
+                        //killable
+                        if (target != null && target.Health < Player.GetSpellDamage(target, SpellSlot.R))
+                        {
+
+                            {
+                                if (target.IsValidTarget() && target.IsInRange(R.Range - 10))
+                                {
+                                    R.Cast(target);
+                                }
+                            }
+                        }
+                        break;
+
+                    case 3:
+                        //R if Hit
+                        if (target != null)
+                            R.CastIfWillHit(target, CountChampR);
+                        break;
                 }
+
+
+
             }
 
         }
@@ -503,6 +667,21 @@ namespace Lil_BloodPump
         #region harassting
         private void DoHarass()
         {
+            //Last hit In Harass
+            if (MMenu["harass"]["harassQlasthit"].Enabled)
+            {
+                if (Q.Ready && !target.IsInRange(900))
+                {
+                    foreach (var minion in GetEnemyLaneMinionsTargetsInRange(Q.Range))
+                    {
+                        if (minion.Health <= Player.GetSpellDamage(minion, SpellSlot.Q))
+                        {
+                            Q.CastOnUnit(minion);
+                        }
+                    }
+                }
+            }
+            //End 
             bool useQ = MMenu["harass"]["harassQ"].Enabled;
             bool useE = MMenu["harass"]["harassE"].Enabled;
 
@@ -569,17 +748,17 @@ namespace Lil_BloodPump
 
             foreach (var jungleTarget in GetGenericJungleMinionsTargetsInRange(Q.Range))
             {
-                if (useQ && jungleTarget.IsValidTarget(Q.Range) && jungleTarget != null && !jungleTarget.UnitSkinName.Contains("Plant"))
+                if (useQ && jungleTarget.IsValidTarget(Q.Range) && jungleTarget != null && !jungleTarget.UnitSkinName.Contains("Plant") && !jungleTarget.UnitSkinName.Contains("Plant"))
                 {
                     Q.Cast(jungleTarget);
                 }
-                if (useW && jungleTarget.IsValidTarget(W.Range) && jungleTarget != null && !jungleTarget.UnitSkinName.Contains("Plant"))
+                if (useW && jungleTarget.IsValidTarget(W.Range) && jungleTarget != null && !jungleTarget.UnitSkinName.Contains("Plant") && !jungleTarget.UnitSkinName.Contains("Ward"))
                 {
                     W.Cast();
                 }
 
 
-                if (useE && jungleTarget.IsValidTarget(E.Range) && jungleTarget != null && !jungleTarget.UnitSkinName.Contains("Plant"))
+                if (useE && jungleTarget.IsValidTarget(E.Range) && jungleTarget != null && !jungleTarget.UnitSkinName.Contains("Plant") && !jungleTarget.UnitSkinName.Contains("Ward"))
                 {
                     if (isEActive)
                     {
@@ -607,11 +786,23 @@ namespace Lil_BloodPump
 
             if (useQ && Q.Ready)
             {
+
                 foreach (var minion in GetEnemyLaneMinionsTargetsInRange(Q.Range))
                 {
-                    if (minion.IsValidTarget(Q.Range) && minion != null)
-                    {
-                        Q.Cast(minion);
+                    switch (MMenu["laneclear"]["qsettns"].As<MenuList>().Value)
+                        {
+                        case 0:
+                            if (minion.IsValidTarget(Q.Range) && minion != null)
+                            {
+                                Q.Cast(minion);
+                            }
+                            break;
+                        case 1:
+                            if (minion.Health <= Player.GetSpellDamage(minion, SpellSlot.Q))
+                            {
+                                Q.CastOnUnit(minion);
+                            }
+                            break;
                     }
                 }
             }
@@ -660,36 +851,10 @@ namespace Lil_BloodPump
 
         }
     }
+
+
+    #endregion
+    #region Misc
+
+    #endregion
 }
-
-        #endregion
-        /*#region Misc
-            private static void GameEventsOnGameStart()
-            {
-
-                Self["mySkin"].OnValueChanged += (sender, args) => Game.OnUpdate += UpdateSkin;
-
-            }
-            private static void UpdateSkin()
-            {
-
-                var mySkin = Misc["mySkin"].Value;
-                Player.SetSkinId(mySkin);
-                Game.OnUpdate -= UpdateSkin;
-            }
-            private static void GameObjectOnOnRevive(GameObject sender)
-            {
-                if (sender is Obj_AI_Hero hero)
-                {
-                    if (hero.IsMe)
-                    {
-                        var mySkin = Self["mySkin"].Value;
-                        Player.SetSkinId(mySkin);
-                    }
-                }
-            }
-
-        }
-    }
-    #endregion*/
-
