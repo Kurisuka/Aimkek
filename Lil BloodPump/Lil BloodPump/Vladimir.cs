@@ -57,14 +57,14 @@
                 //Misc.Add(new MenuSeperator("soon", "SoonBIK"));
             }
         }
-
+        internal static Menu EvadeMenu { get; set; }
         public Vladimir()
         {
             
 
             
             Orbwalker.Attach(MMenu);
-            LoadSkinAsync();
+            
             var ComboStuff = new Menu("combo", "Combo Settings");
             {
                 ComboStuff.Add(new MenuBool("useQ", "Use Q in Combo"));
@@ -107,7 +107,13 @@
             var LastHit = new Menu("lasthit", "LastHit Settings");
             LastHit.Add(new MenuBool("lasthitQ", "Use Q to Lasthit Minions"));
             MMenu.Add(LastHit);
-
+            EvadeMenu = new Menu("wset", "W Evade Settings");
+            {
+                SpellBlocking.EvadeManager.Attach(EvadeMenu);
+                SpellBlocking.EvadeOthers.Attach(EvadeMenu);
+                SpellBlocking.EvadeTargetManager.Attach(EvadeMenu);
+            }
+            MMenu.Add(EvadeMenu);
             var LaneClear = new Menu("laneclear", "LaneClear Settings");
             {
                 LaneClear.Add(new MenuBool("useQ", "Use Q to Clear Lane"));
@@ -134,6 +140,7 @@
                 Killsteal.Add(new MenuBool("useR", "Use R to Killsteal"));
             }
             MMenu.Add(Killsteal);
+            LoadSkinAsync();
             MMenu.Add(Misc);
 
             var Drawings = new Menu("drawings", "Drawings Settings");
