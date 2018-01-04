@@ -446,20 +446,20 @@
                 {
                     if (MMenu["combo"]["Rcombo"].As<MenuList>().Value == 0)
                     {
-                        MMenu["combo"]["rcombo"].As<MenuList>().Value = 1;
+                        MMenu["combo"]["Rcombo"].As<MenuList>().Value = 1;
                         Uhh = Game.TickCount + 300;
                         return;
 
                     }
-                    if (MMenu["combo"]["rcombo"].As<MenuList>().Value == 1)
+                    if (MMenu["combo"]["Rcombo"].As<MenuList>().Value == 1)
                     {
-                        MMenu["combo"]["rcombo"].As<MenuList>().Value = 2;
+                        MMenu["combo"]["Rcombo"].As<MenuList>().Value = 2;
                         Uhh = Game.TickCount + 300;
                         return;
                     }
-                    if (MMenu["combo"]["rcombo"].As<MenuList>().Value == 2)
+                    if (MMenu["combo"]["Rcombo"].As<MenuList>().Value == 2)
                     {
-                        MMenu["combo"]["rcombo"].As<MenuList>().Value = 0;
+                        MMenu["combo"]["Rcombo"].As<MenuList>().Value = 0;
                         Uhh = Game.TickCount + 300;
                         return;
                     }
