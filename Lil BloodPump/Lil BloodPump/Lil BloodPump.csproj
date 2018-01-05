@@ -61,11 +61,34 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Skinhax.cs" />
+    <Compile Include="SpellBlocking\BlockSpellData.cs" />
+    <Compile Include="SpellBlocking\BlockSpellDataBase.cs" />
+    <Compile Include="SpellBlocking\Collision.cs" />
+    <Compile Include="SpellBlocking\CollisionObjectTypes.cs" />
+    <Compile Include="SpellBlocking\DetectedCollision.cs" />
+    <Compile Include="SpellBlocking\DetectionType.cs" />
+    <Compile Include="SpellBlocking\EvadeManager.cs" />
+    <Compile Include="SpellBlocking\EvadeOthers.cs" />
+    <Compile Include="SpellBlocking\EvadeSpellData.cs" />
+    <Compile Include="SpellBlocking\EvadeSpellDatabase.cs" />
+    <Compile Include="SpellBlocking\EvadeTargetManager.cs" />
+    <Compile Include="SpellBlocking\FastPredResult.cs" />
+    <Compile Include="SpellBlocking\FoundIntersection.cs" />
+    <Compile Include="SpellBlocking\Geometry.cs" />
+    <Compile Include="SpellBlocking\IsSafeResult.cs" />
+    <Compile Include="SpellBlocking\SafePathResult.cs" />
+    <Compile Include="SpellBlocking\Skillshot.cs" />
+    <Compile Include="SpellBlocking\SkillshotDetector.cs" />
+    <Compile Include="SpellBlocking\SkillShotType.cs" />
+    <Compile Include="SpellBlocking\SpellData.cs" />
+    <Compile Include="SpellBlocking\SpellDatabase.cs" />
+    <Compile Include="SpellBlocking\Utils.cs" />
     <Compile Include="Vladimir.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
