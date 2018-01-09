@@ -15,9 +15,9 @@ namespace Lil_BloodPump
         {
             GameEvents.GameStart += GameEvents_GameStart;
             //Gapcloser.OnGapcloser += Gapclose;
-            GameEvents.GameStart += GameEventsOnGameStart;
+            /*GameEvents.GameStart += GameEventsOnGameStart;
             Game.OnUpdate += UpdateSkin;
-            GameObject.OnRevive += GameObjectOnOnRevive;
+            GameObject.OnRevive += GameObjectOnOnRevive;*/
             
         }
         private static void GameEvents_GameStart()
@@ -27,7 +27,7 @@ namespace Lil_BloodPump
 
             var Vladimir = new Vladimir();
         }
-        public static void GameEventsOnGameStart()
+        /*public static void GameEventsOnGameStart()
         {
 
 
@@ -51,7 +51,7 @@ namespace Lil_BloodPump
                     Player.SetSkinId(mySkin);
                 }
             }
-        }
+        }*/
 
     }
 }

@@ -43,7 +43,7 @@
             R.SetSkillshot(0.25f, 175f, 700f, false, SkillshotType.Circle);
 
         }
-        public async void LoadSkinAsync()
+        /*public async void LoadSkinAsync()
         {
 
             var skins = await (Skinhax.GetSkins(Player.ChampionName));
@@ -56,7 +56,7 @@
                 Misc.Add(Self);
                 //Misc.Add(new MenuSeperator("soon", "SoonBIK"));
             }
-        }
+        }*/
         internal static Menu EvadeMenu { get; set; }
         public Vladimir()
         {
@@ -71,6 +71,7 @@
                 ComboStuff.Add(new MenuBool("useW", "Use W in Combo"));
                 ComboStuff.Add(new MenuBool("useE", "Use E in Combo"));
                 ComboStuff.Add(new MenuBool("useR", "Use R in Combo"));
+                ComboStuff.Add(new MenuBool("aatoggle", "Toggle AA in Combo"));
                 ComboStuff.Add(new MenuSeperator("rsetts", "--Ultimate Settings--"));
                 //ComboStuff.Add(new MenuBool("useRkillable", "Only if Killable in 1v1 Situations"));
                 
@@ -140,8 +141,8 @@
                 Killsteal.Add(new MenuBool("useR", "Use R to Killsteal"));
             }
             MMenu.Add(Killsteal);
-            LoadSkinAsync();
-            MMenu.Add(Misc);
+            /*LoadSkinAsync();
+            MMenu.Add(Misc);*/
 
             var Drawings = new Menu("drawings", "Drawings Settings");
             {
@@ -380,6 +381,7 @@
         {
             string drawpos = "";
             string drawposburst = "";
+            string aatoggledraw = "";
             double SpellsDamagge = R.GetDamage(target) + E.GetDamage(target) + W.GetDamage(target) * 2 +
                                Q.GetDamage(target) * 2;
             
@@ -404,6 +406,11 @@
                         break;
                 }
             }
+            if (MMenu["combo"]["aatoggle"].Enabled)
+            {
+                aatoggledraw = "Use AA in Combo Enabled";
+            }
+            else aatoggledraw = "Use AA in Combo Disabled";
 
             var newpos = Player.FloatingHealthBarPosition;
             newpos.X += 0;
@@ -411,10 +418,14 @@
             var pos = Player.FloatingHealthBarPosition;
             pos.X += 0;
             pos.Y += 180;
+            var aatoggles = Player.FloatingHealthBarPosition;
+            aatoggles.X += 0;
+            aatoggles.Y += 220;
 
 #pragma warning disable CS0618 // Type or member is obsolete
             Render.Text(pos, Color.DeepPink, drawpos);
             Render.Text(newpos, Color.Cyan, drawposburst);
+            Render.Text(aatoggles, Color.DeepSkyBlue, aatoggledraw);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
         public void Game_OnUpdate()
@@ -570,6 +581,12 @@
             bool useR = MMenu["combo"]["useR"].Enabled;
             //bool useRkillable = MMenu["combo"]["useRkillable"].Enabled;
             //bool useRifhit = MMenu["combo"]["rifhit"].As<MenuSliderBool>().Enabled;
+            if (!MMenu["combo"]["aatoggle"].Enabled)
+            {
+                Orbwalker.Implementation.AttackingEnabled = false;
+            }
+            else Orbwalker.Implementation.AttackingEnabled = true;
+
             int CountChampR = MMenu["combo"]["rifhit"].As<MenuSlider>().Value;
             if (useR)
             {
